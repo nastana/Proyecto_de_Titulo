@@ -10,7 +10,7 @@ db_url = 'localhost'
 db_name = 'proyecto-v01'
 db_user = 'root'
 db_password = 'Manimanito110997'
-engine = create_engine(f'mysql://{db_user}:{db_password}@{db_url}/{db_name}')
+engine = create_engine(f'mysql+pymysql://{db_user}:{db_password}@{db_url}/{db_name}')
 Session = sessionmaker(bind=engine)
 
 Base = declarative_base()
@@ -18,10 +18,10 @@ Base = declarative_base()
 class Entity():
     id = Column(Integer, primary_key=True)
     created_at = Column(DateTime)
-    update_at = Column(DateTime)
+    updated_at = Column(DateTime)
     last_updated_by = Column(String(16))
 
     def __init__(self, created_by):
         self.created_at = datetime.now()
-        self.update_at = datetime.now()
+        self.updated_at = datetime.now()
         self.last_updated_by = created_by

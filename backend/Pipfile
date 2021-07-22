@@ -5,6 +5,13 @@ name = "pypi"
 
 [packages]
 sqlalchemy = "*"
+flask = "*"
+marshmallow = "*"
+mysql-connector-python = "*"
+pymysql = "*"
+flask-sqlalchemy = "*"
+flask-mysqldb = "*"
+flask-cors = "*"
 
 [dev-packages]
 
