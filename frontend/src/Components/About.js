@@ -1,48 +1,47 @@
-import React from 'react'
+import React from 'react';
+import {Modal, Button } from 'react-bootstrap';
 
+function MyVerticallyCenteredModal(props) {
+    return (
+        <Modal
+            {...props}
+            size="lg"
+            aria-labelledby="contained-modal-title-vcenter"
+            centered
+        >
+            <Modal.Header closeButton>
+                <Modal.Title id="contained-modal-title-vcenter">
+                    Modal heading
+                </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <h4>Centered Modal</h4>
+                <p>
+                    Cras mattis consectetur purus sit amet fermentum. Cras justo odio,
+                    dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta ac
+                    consectetur ac, vestibulum at eros.
+                </p>
+            </Modal.Body>
+            <Modal.Footer>
+                <Button onClick={props.onHide}>Close</Button>
+            </Modal.Footer>
+        </Modal>
+    );
+}
 export const About = () => {
-    
+
+    const [modalShow, setModalShow] = React.useState(false);
+
     return (
         <div>
-            <form role="form" id="formfield" action="inc/Controller/OperatorController.php" method="post" encType="multipart/form-data" onsubmit="return validateForm();">
-                <input type="hidden" name="action" defaultValue="add_form" />
-                <div className="form-group">
-                    <label>Last Name</label><span className="label label-danger">*required</span>
-                    <input className="form-control" placeholder="Enter Last Name" name="lastname" id="lastname" />
-                </div>
-                <div className="form-group">
-                    <label>First Name</label><span className="label label-danger">*required</span>
-                    <input className="form-control" placeholder="Enter First Name" name="firstname" id="firstname" />
-                </div>
-                <input type="button" name="btn" defaultValue="Submit" id="submitBtn" data-toggle="modal" data-target="#confirm-submit" className="btn btn-default" />
-                <input type="button" name="btn" defaultValue="Reset" onclick="window.location='fillup.php'" className="btn btn-default" data-modal-type="confirm" />
-            </form>
-            <div className="modal fade" id="confirm-submit" tabIndex={-1} role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                <div className="modal-dialog">
-                    <div className="modal-content">
-                        <div className="modal-header">
-                            Confirm Submit
-                        </div>
-                        <div className="modal-body">
-                            Are you sure you want to submit the following details?
-                            <table className="table">
-                                <tbody><tr>
-                                    <th>Last Name</th>
-                                    <td id="lname" />
-                                </tr>
-                                    <tr>
-                                        <th>First Name</th>
-                                        <td id="fname" />
-                                    </tr>
-                                </tbody></table>
-                        </div>
-                        <div className="modal-footer">
-                            <button type="button" className="btn btn-default" data-dismiss="modal">Cancel</button>
-                            <a href="#" id="submit" className="btn btn-success success">Submit</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <Button variant="primary" onClick={() => setModalShow(true)}>
+                Launch vertically centered modal
+            </Button>
+
+            <MyVerticallyCenteredModal
+                show={modalShow}
+                onHide={() => setModalShow(false)}
+            />
         </div>
 
     );

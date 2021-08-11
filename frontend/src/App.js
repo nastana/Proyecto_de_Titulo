@@ -5,6 +5,7 @@ import {About} from './Components/About'
 import {Users} from './Components/Users'
 import {Main} from './Components/Main'
 import {Load} from './Components/Load'
+import {Test} from './Components/Test'
 function App() {
   return (
     <Router>
@@ -12,6 +13,7 @@ function App() {
       <div>
         <Switch>
           <Route path = "/about" component={About}/>
+          <Route path = "/test" component={Test} />
           <Route path = "/input" component = {Users}/>
           <Route path = "/load" component = {Load}/>
           <Route path = "/" component={Main}/>

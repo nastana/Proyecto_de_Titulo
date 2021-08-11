@@ -39,9 +39,9 @@ export const Load = () => {
                                 <td>${sim.porosity}</td>
                                 <td>
                                     <a href="TimeSimP6TransIsoW1.0M350" download>
-                                    <button type="button" className="btn btn-primary my-2" >
-                                        Download results
-                                    </button>
+                                        <button type="button" className="btn btn-primary my-2" >
+                                            Download results
+                                        </button>
                                     </a>
                                 </td>
                             </tr>

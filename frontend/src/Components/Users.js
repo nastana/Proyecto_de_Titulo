@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 //import { Modalconfirm } from './Modal_confirm'
 import image from '../Imagenes/Untitled Diagram (28).png'
+import { Modal, Button } from 'react-bootstrap';
+
 
 const API = process.env.REACT_APP_BACKEND;
 
@@ -101,44 +103,35 @@ export const Users = () => {
                             />
                         </div>
                         <div className="d-grid gap-2 d-md-flex justify-content-md-start mb-4 mb-lg-3">
-                            
-                            <button type="submit" class="btn btn-primary my-2">Submit</button>
+                            <button type="submit" className="btn btn-primary my-2" >Submit</button>
+                            <button type="button" className="btn btn-primary my-2" data-bs-toggle="modal" data-bs-target="#myModal">test</button>
                             <a href="/" className="btn btn-secondary my-2">Back</a>
                         </div>
                     </form>
-                    <div className="modal fade" id="confirm-submit" tabIndex={-1} role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                        <div className="modal-dialog">
-                            <div className="modal-content">
-                                <div className="modal-header">
-                                    Confirm Submit
-                                </div>
-                                <div className="modal-body">
-                                    Are you sure you want to submit the following details?
-                                    <table className="table">
-                                        <tbody><tr>
-                                            <th>Last Name</th>
-                                            <td id="lname" />
-                                        </tr>
-                                            <tr>
-                                                <th>First Name</th>
-                                                <td id="fname" />
-                                            </tr>
-                                        </tbody></table>
-                                </div>
-                                <div className="modal-footer">
-                                    <button type="button" className="btn btn-default" data-dismiss="modal">Cancel</button>
-                                    <a href="/" id="submit" className="btn btn-success success">Submit</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
                 </div>
                 <div className="col-lg-7 text-center text-lg-start">
                     <h1 className="display-4 fw-bold lh-1 mb-3">Image representative</h1>
-                    <img src = {image}></img>
+                    <img src={image}></img>
                 </div>
             </div>
+            <div className="modal fade" id="exampleModal" tabIndex={-1} aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div className="modal-dialog">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h5 className="modal-title" id="exampleModalLabel">Modal title</h5>
+                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" />
+                        </div>
+                        <div className="modal-body">
+                            ...
+                        </div>
+                        <div className="modal-footer">
+                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" className="btn btn-primary">Save changes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     );
 };
