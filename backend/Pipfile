@@ -13,6 +13,7 @@ flask-sqlalchemy = "*"
 flask-mysqldb = "*"
 flask-cors = "*"
 fenics = "*"
+fenics-ffc = "*"
 
 [dev-packages]
 

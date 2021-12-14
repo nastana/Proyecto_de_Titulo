@@ -14,28 +14,51 @@ export const Users = () => {
     const [espesor, setEspesor] = useState('')
     const [porosidad, setPorosidad] = useState('')
 
+    const [show, setShow] = useState(false);
+    const [showf, setShowf] = useState(false);
+
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+
+
     var imagen = new Image();
     //imagen.onload = imagenCargada;
     imagen.src = "../Imagenes/Untitled Diagram (27).png"
     const handleSubmit = async (e) => {
         //console.log(e)
         e.preventDefault();
-        await fetch(`${API}/Input_data`, {
+        const response = await fetch(`${API}/Input_data`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
-            },
+                'Content-Type': 'application/json',
+                'Access-Control-Expose-Headers': Location,
+                        },
             body: JSON.stringify({
                 n_transmitter: n_emisores,
                 n_receiver: n_receptores,
                 distance: distance,
                 plate_thickness: espesor,
-                porosity: porosidad
+                porosity: porosidad,
+                status: "Not started"
             })
         })
-        console.log("ok")
+        console.log(response.headers.get('Location'))
+        console.log(Location)
+        console.log(response.Location)
+
+        return "response"
+    }
+    const datacheck = async () => {
+        if (n_emisores === '' || n_receptores === '' || distance === '' || espesor === '' || porosidad === '') {
+            <div class="alert alert-danger">
+                <strong>Danger!</strong> Indicates a dangerous or potentially negative action.
+            </div>
+        } else {
+            handleShow()
+        }
 
     }
+
 
     return (
         <div className="container p-4">
@@ -52,6 +75,7 @@ export const Users = () => {
                                 onChange={e => setN_emisores(e.target.value)}
                                 value={n_emisores}
                                 autoFocus
+                                required
                             />
                         </div>
                         <div className="form-group">
@@ -64,6 +88,7 @@ export const Users = () => {
                                 onChange={e => setN_receptores(e.target.value)}
                                 value={n_receptores}
                                 autoFocus
+                                required
                             />
                         </div>
                         <div className="form-group">
@@ -76,6 +101,7 @@ export const Users = () => {
                                 onChange={e => setDistance(e.target.value)}
                                 value={distance}
                                 autoFocus
+                                required
                             />
                         </div>
                         <div className="form-group">
@@ -88,6 +114,7 @@ export const Users = () => {
                                 onChange={e => setEspesor(e.target.value)}
                                 value={espesor}
                                 autoFocus
+                                required
                             />
                         </div>
                         <div className="form-group">
@@ -100,14 +127,30 @@ export const Users = () => {
                                 onChange={e => setPorosidad(e.target.value)}
                                 value={porosidad}
                                 autoFocus
+                                required
                             />
                         </div>
                         <div className="d-grid gap-2 d-md-flex justify-content-md-start mb-4 mb-lg-3">
-                            <button type="submit" className="btn btn-primary my-2" >Submit</button>
-                            <button type="button" className="btn btn-primary my-2" data-bs-toggle="modal" data-bs-target="#myModal">test</button>
+                            <button className="btn btn-primary my-2" onClick={datacheck}>Send data</button>
                             <a href="/" className="btn btn-secondary my-2">Back</a>
                         </div>
+
+                        <Modal show={show} onHide={handleClose}>
+                            <Modal.Header closeButton>
+                                <Modal.Title>Succes</Modal.Title>
+                            </Modal.Header>
+                            <Modal.Body>You have submitted the data for your simulation.
+                                To start the simulation, you must initialise it from the view data section.</Modal.Body>
+                            <Modal.Footer>
+                                {/* <Button onClick={() => startSimultation(extended_data.id)}> Start Simulation </Button> */}
+                                <Button variant="secondary" onClick={handleClose}>
+                                    Close
+                                </Button>
+
+                            </Modal.Footer>
+                        </Modal>
                     </form>
+
                 </div>
                 <div className="col-lg-7 text-center text-lg-start">
                     <h1 className="display-4 fw-bold lh-1 mb-3">Image representative</h1>

@@ -412,13 +412,13 @@ for sous_j in range(nsous):
 
 import scipy.io as sio
 # create dictionary with variables to save
-savedic = {'zlim': zlim, 'ylim': ylim, 'nsous': nsous,
-          'zsous': zsous, 'ysous': ysous, 'nsens': nsens,
-          'zsens': zsens, 'ysens': ysens, 'ntimes': ntimes,
-          'times': times,
-          'sol_sensors_z': sol_sensors_z, 'sol_sensors_y': sol_sensors_y}
-filename = 'Files_mat/TimeSimP'+str(por+1)+'TransIsoW'+            str(ylim)+'M'+str(size)
-sio.savemat(filename, savedic, appendmat=True)
+# savedic = {'zlim': zlim, 'ylim': ylim, 'nsous': nsous,
+#           'zsous': zsous, 'ysous': ysous, 'nsens': nsens,
+#           'zsens': zsens, 'ysens': ysens, 'ntimes': ntimes,
+#           'times': times,
+#           'sol_sensors_z': sol_sensors_z, 'sol_sensors_y': sol_sensors_y}
+# filename = 'Files_mat/TimeSimP'+str(por+1)+'TransIsoW'+            str(ylim)+'M'+str(size)
+# sio.savemat(filename, savedic, appendmat=True)
 print(f"zlim: {zlim} \n ylim:  {ylim} \n nsous: {nsous} \n \
         zsous: {zsous} \n ysous: {ysous} \n nsens: {nsens} \
         zsens: {zsens} \n ysens: {ysens}\n ntimes: {ntimes}\n \
