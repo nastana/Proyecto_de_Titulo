@@ -1,4 +1,4 @@
-#Desarrollo de una interfaz permitiendo el uso fácil de un código de simulación de ondas guiadas por el hueso cortical
+# Desarrollo de una interfaz permitiendo el uso fácil de un código de simulación de ondas guiadas por el hueso cortical
 _Este proyecto esta centrado en la creación de una interfaz gráfica que de como solución a la utilización de un código de simulación mediante una aplicación web. Este git presenta el desarrollo tanto de frontend como backend lo cual facilita a la hora de organización._
 
 ## Comenzando 
