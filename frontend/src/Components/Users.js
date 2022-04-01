@@ -4,8 +4,7 @@ import image from '../Imagenes/Untitled Diagram (28).png'
 import { Modal, Button } from 'react-bootstrap';
 
 
-const API = process.env.REACT_APP_BACKEND;
-
+const API = process.env.REACT_APP_BACKEND
 export const Users = () => {
 
     const [n_emisores, setN_emisores] = useState('')
@@ -15,7 +14,7 @@ export const Users = () => {
     const [porosidad, setPorosidad] = useState('')
 
     const [show, setShow] = useState(false);
-    const [showf, setShowf] = useState(false);
+    // const [showf, setShowf] = useState(false);
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -49,7 +48,7 @@ export const Users = () => {
         return "response"
     }
     const datacheck = async () => {
-        if (n_emisores === '' || n_receptores === '' || distance === '' || espesor === '' || porosidad === '') {
+        if (n_emisores === '' || n_receptores === ''  || espesor === '' || porosidad === '') {
             <div class="alert alert-danger">
                 <strong>Danger!</strong> Indicates a dangerous or potentially negative action.
             </div>
@@ -68,7 +67,7 @@ export const Users = () => {
                         <div className="form-group">
                             <label htmlFor="formGroupExampleInput2" className="form-label">Number of emitters</label>
                             <input
-                                type="text"
+                                type="number"
                                 className="form-control"
                                 id="n_emisores"
                                 placeholder="Enter your emitter number"
@@ -81,7 +80,7 @@ export const Users = () => {
                         <div className="form-group">
                             <label htmlFor="formGroupExampleInput2" className="form-label">Number of receivers</label>
                             <input
-                                type="text"
+                                type="number"
                                 className="form-control"
                                 id="n_receptores"
                                 placeholder="Enter your receivers number"
@@ -92,22 +91,23 @@ export const Users = () => {
                             />
                         </div>
                         <div className="form-group">
-                            <label htmlFor="formGroupExampleInput2" className="form-label">Distance betwen last emitter and first receiver (mm)</label>
+                            <label htmlFor="formGroupExampleInput2" className="form-label">Typical Mesh Size (mm)</label>
                             <input
-                                type="text"
+                                type="number"
                                 className="form-control"
                                 id="distance"
-                                placeholder="Enter your Distance"
+                                placeholder="Enter Typical Mesh Size"
                                 onChange={e => setDistance(e.target.value)}
                                 value={distance}
                                 autoFocus
+                                step = "0.1"
                                 required
                             />
                         </div>
                         <div className="form-group">
                             <label htmlFor="formGroupExampleInput2" className="form-label">Plate thickness (mm)</label>
                             <input
-                                type="text"
+                                type="number"
                                 className="form-control"
                                 id="espesor"
                                 placeholder="Enter your plate thickness"
@@ -120,7 +120,7 @@ export const Users = () => {
                         <div className="form-group">
                             <label htmlFor="formGroupExampleInput2" className="form-label">Porosity (%)</label>
                             <input
-                                type="text"
+                                type="number"
                                 className="form-control"
                                 id="porosidad"
                                 placeholder="Enter your Porosity"
@@ -143,6 +143,7 @@ export const Users = () => {
                                 To start the simulation, you must initialise it from the view data section.</Modal.Body>
                             <Modal.Footer>
                                 {/* <Button onClick={() => startSimultation(extended_data.id)}> Start Simulation </Button> */}
+                                <Button variant = "primary" href="/load">Go to simulation</Button>
                                 <Button variant="secondary" onClick={handleClose}>
                                     Close
                                 </Button>
@@ -153,7 +154,7 @@ export const Users = () => {
 
                 </div>
                 <div className="col-lg-7 text-center text-lg-start">
-                    <h1 className="display-4 fw-bold lh-1 mb-3">Image representative</h1>
+                    <h1 className="display-4 fw-bold" align="center">Summary Diagram</h1>
                     <img src={image}></img>
                 </div>
             </div>

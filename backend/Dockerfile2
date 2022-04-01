@@ -1,0 +1,31 @@
+FROM python3.8
+
+MAINTAINER FelipeCastro "felipe.castroa@alumnos.uv.cl"
+
+WORKDIR /usr/src/app
+
+#RUN apt-get update -y && \
+#    apt-get install -y python-pip python-dev
+#RUN apt-get -y install git
+
+COPY ./requeriments.txt ./
+
+#WORKDIR /src
+
+RUN pip3 install --no-cache-dir -r requeriments.txt
+
+#RUN "FENICS_VERSION=$(python3 -c"import ffc; print(ffc.__version__)")"
+RUN "git clone https://bitbucket.org/fenics-project/dolfin"
+#RUN "git clone --branch=$FENICS_VERSION https://bitbucket.org/fenics-project/mshr"
+#RUN "mkdir dolfin/build && cd dolfin/build && cmake .. && make install && cd ../.."
+#RUN "mkdir dolfin/build && cd dolfin/build && cmake .. && make install && cd ../.."
+#RUN "cd dolfin/python && pip3 install . && cd ../.."
+#RUN "cd mshr/python   && pip3 install . && cd ../.."
+
+COPY . .
+
+EXPOSE 3000
+
+ENTRYPOINT [ "python3" ]
+
+CMD [ "src/main.py"]

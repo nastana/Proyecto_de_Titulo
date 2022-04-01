@@ -6,9 +6,9 @@ import Col from "react-bootstrap/Col";
 import Dropdown from 'react-bootstrap/Dropdown';
 import Row from "react-bootstrap/Row";
 import Pagination from './Pagination';
+import filemat from '../Components/download/matfile.mat'
 
 const API = process.env.REACT_APP_BACKEND;
-//const API_PUT = process.env.PUT_QLO;
 
 export const Load = () => {
 
@@ -20,16 +20,21 @@ export const Load = () => {
     const [currentPage, setCurentPage] = useState(1);
     const [postPerPage, setPostPerPage] = useState(10);
 
+    const [showd, setShowd] = useState(false);
+    const handleClosed = () => setShowd(false);
+    const handleShowd = () => setShowd(true);
 
 
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
+    const [dataDownload, setdataDownload] = useState([]);
+
 
 
     const getSim = async (v) => {
-        if (v == 0 || searchInput == '') {
+        if (v === 0 || searchInput === '') {
 
             const res = await fetch(`${API}/Load_data`)
             const data = await res.json();
@@ -44,42 +49,30 @@ export const Load = () => {
             //console.log(data[1])
             console.log("Consulta all")
         }
-        else if (v == "ID") {
+        else if (v === "ID") {
             console.log("Consulta Id")
             const res = await fetch(`${API}/Load_data/${searchInput}`)
             const data = await res.json()
             setSim(data)
         }
-        else if (v == "Porosity") {
+        else if (v === "Porosity") {
             console.log("Consulta Porosity")
             const res = await fetch(`${API}/Load_data/porosity/${searchInput}`)
             const data = await res.json()
             setSim(data)
         }
 
-        else if (v == "Distance") {
+        else if (v === "Distance") {
             console.log("Consulta Distancia")
             const res = await fetch(`${API}/Load_data/distance/${searchInput}`)
             const data = await res.json()
             setSim(data)
         }
-        // else {
-        //     console.log("wat")
-        //     const res = await fetch(`${API}/Load_data/${id}`)
-        //     const data = await res.json()
-        //     setSim(data)
-        // }
 
     }
 
 
     useEffect(() => {
-        // const fetchEarly = async () => {
-        //     const res = await fetch(`${API}/Load_data`)
-        //     const data = await res.json();
-        //     setSim(data)
-        // }
-        // fetchEarly();
         getSim(0);
 
     }, [])
@@ -102,29 +95,12 @@ export const Load = () => {
     }
 
     const startSimultation = async (id) => {
+        setShow(false);
         //const res = await fetch(`${API}/Load_data/${id}`)
         //const datasim = await res.json()
 
         //console.log(n_emisores)
-        if (typeof extended_data == "object") {
-            //console.log("Es un objeto")
-            // console.log(extended_data)
-            // console.log(extended_data[0]['n_transmitter'])
-            // console.log(extended_data[0]['n_receiver'])
-            // console.log(extended_data[0]['distance'])
-            // console.log(extended_data[0]['plate_thickness'])
-            // console.log(extended_data[0]['porosity'])
-            // console.log(id)
-            // console.log(API)
-            // console.log(API_PUT)
-
-            // let data = {
-            //     n_transmitter: extended_data[0]['n_transmitter'],
-            //     n_receiver: extended_data[0]['n_receiver'],
-            //     distance: extended_data[0]['distance'],
-            //     plate_thickness: extended_data[0]['plate_thickness'],
-            //     porosity: extended_data[0]['porosity']
-            // }
+        if (typeof extended_data === "object") {
 
             await fetch(`${API}/load_data_PUT/${id}`, {
                 method: 'PUT',
@@ -155,6 +131,16 @@ export const Load = () => {
 
         //console.log("okis")
 
+    }
+
+    const downloadSimulation = async (id) => {
+        setShow(false)
+        const resDownload = await fetch(`${API}/Load_data/download/${id}`)
+        const aer = await resDownload.json()
+        console.log("a",aer)
+        setdataDownload(aer)
+        //const download = await res.json()
+        handleShowd()
     }
 
 
@@ -192,7 +178,7 @@ export const Load = () => {
                             />
                         </Col>
                         <Col>
-                            <Button variant="primary" size="sm" onClick={e => getSim(search)} paginate = {1}>
+                            <Button variant="primary" size="sm" onClick={e => getSim(search)} paginate={1}>
                                 Search
                             </Button>
                         </Col>
@@ -207,7 +193,7 @@ export const Load = () => {
                                 <th>ID</th>
                                 <th>Number of emitters</th>
                                 <th>Number of receivers</th>
-                                <th>Distance betwen last emitter and first receiver</th>
+                                <th>Typical Mesh Size</th>
                                 <th>Plate thickness</th>
                                 <th>Porosity</th>
                                 <th>Results</th>
@@ -238,7 +224,18 @@ export const Load = () => {
                             ))}
                         </tbody>
                     </table>
-                    <Pagination postsPerPage={postPerPage} totalPosts={sim.length} paginate={paginate} />
+
+                </div>
+                <div clasName="container">
+                    <div className="row">
+                        <div className="col">
+                            <Button variant="secondary" clasName='justify-content-md-start' href="/">Back</Button>
+                        </div>
+                        <div className="col">
+                            <Pagination postsPerPage={postPerPage} totalPosts={sim.length} paginate={paginate} />
+                        </div>
+                    </div>
+
                 </div>
                 <Modal show={show} onHide={handleClose}>
                     <Modal.Header closeButton>
@@ -278,7 +275,7 @@ export const Load = () => {
                                                 <td>{extended_data.n_receiver}</td>
                                             </tr>
                                             <tr>
-                                                <td>Distance betwen last emitter and first receiver:</td>
+                                                <td>Typical Mesh Size (mm):</td>
                                                 <td>{extended_data.distance}</td>
                                             </tr>
                                             <tr>
@@ -288,6 +285,10 @@ export const Load = () => {
                                             <tr>
                                                 <td>Porosity:</td>
                                                 <td>{extended_data.porosity}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Time Ejecution [HH:MM:SS] </td>
+                                                <td>{extended_data.time}</td>
                                             </tr>
                                             <tr>
                                                 <td>Status:</td>
@@ -304,7 +305,10 @@ export const Load = () => {
                                         : (
                                             extended_data.p_status == "In progress"
                                                 ? <Button variant="warning" disabled> Wait </Button>
-                                                : <a download="TimeSimP6TransIsoW1.0M350" href="/path/to/image" title="ImageName"><Button variant="success" download> donwload </Button></a>
+                                                :
+                                                <Button onClick={() => downloadSimulation(extended_data.id)} >Download
+                                                </Button>
+                                            /* <a download="TimeSimP6TransIsoW1.0M350" href="/path/to/image" title="ImageName"><Button variant="success" download> donwload </Button></a> */
                                         )}
                                     {/* } */}
                                     {/* {customButton} */}
@@ -320,6 +324,20 @@ export const Load = () => {
 
 
 
+                </Modal>
+                <Modal show={showd} onHide={handleClosed}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Download</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>You will download the result of the selected simulation </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={handleClosed}>
+                            Close
+                        </Button>
+                        <Button variant="primary" href={filemat} download={dataDownload}>
+                            Download
+                        </Button>
+                    </Modal.Footer>
                 </Modal>
             </Container>
         </div>

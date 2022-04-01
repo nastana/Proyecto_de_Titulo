@@ -1,0 +1,9 @@
+{
+    "python.analysis.extraPaths": [
+        "./backend/src/Reidmen Fenics/ipnyb propagation"
+    ],
+    "vscode-pets.petColor": "gray",
+    "vscode-pets.petSize": "large",
+    "vscode-pets.petType": "rubber-duck",
+    "vscode-pets.theme": "forest"
+}

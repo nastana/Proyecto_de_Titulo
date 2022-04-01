@@ -1,7 +1,45 @@
 import React from 'react';
 
+var number1 = 1
+
 const Pagination = ({ postsPerPage, totalPosts, paginate }) => {
   const pageNumbers = [];
+  const pagactual = (number, opcion) => {
+    console.log("number1:",number1)
+    console.log("number:",number)
+    if (opcion === 0) {
+      number1 = number
+      paginate(number)
+
+    }
+    if (opcion === 1) {
+      if (number1 > totalPosts / 10) {
+        number1 = number1
+        console.log(number1)
+
+      } else {
+        paginate(number1 + 1)
+        number1 = number1 + 1
+        console.log(number1)
+      }
+    }
+    if (opcion === 2) {
+      console.log("trunc",Math.trunc(totalPosts / 10))
+      if (number1 >= Math.trunc(totalPosts / 10)) {
+        
+
+        paginate(number1 - 1)
+        number1 = number1 - 1
+        console.log(number1)
+      } else {
+        number1 = number1
+        console.log("number1 pre:",number1)
+      }
+
+    }
+  }
+
+
 
   for (let i = 1; i <= Math.ceil(totalPosts / postsPerPage); i++) {
     pageNumbers.push(i);
@@ -9,23 +47,20 @@ const Pagination = ({ postsPerPage, totalPosts, paginate }) => {
 
   return (
     <nav>
-      <ul className='pagination' className="pagination justify-content-end">
-        <li className="page-item disabled">
-          <a className="page-link" href="#" tabindex="-1">Previous</a>
+      <ul className='pagination pagination justify-content-end'>
+        <li className="page-item">
+          <a className="page-link" onClick={() => pagactual(number1, 2)}>Previous</a>
         </li>
         {pageNumbers.map(number => (
           <li key={number} className='page-item'>
-            <a onClick={() => paginate(number)} className='page-link' >
+            <a onClick={() => pagactual(number, 0)} className='page-link' >
               {number}
             </a>
           </li>
-          
         ))}
-        
         <li className="page-item">
-          <a className="page-link"onClick={() => paginate(1)}>Next</a>
+          <a className="page-link" onClick={() => pagactual(number1, 1)}>Next</a>
         </li>
-        
       </ul>
     </nav>
   );
