@@ -54,7 +54,7 @@ export const Users = () => {
     }
     const datacheck = async () => {
         if (n_emisores === '' || n_receptores === ''  || espesor === '' || porosidad === '') {
-            <div class="alert alert-danger">
+            <div className="alert alert-danger">
                 <strong>Danger!</strong> Indicates a dangerous or potentially negative action.
             </div>
         } else {
@@ -67,24 +67,24 @@ export const Users = () => {
         <div className="container p-4">
             <div className="row align-items-center g-lg-5 py-5">
                 <div className="col-md-10 mx-auto col-lg-5">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-6">
-                                <h5 class="card-title">Enter Simulation Parameters</h5>
+                <div className="card">
+                    <div className="card-body">
+                        <div className="row">
+                            <div className="col-6">
+                                <h5 className="card-title">Enter Simulation Parameters</h5>
                             </div>
-                            <div class="col-6 d-md-flex justify-content-md-end">
+                            <div className="col-6 d-md-flex justify-content-md-end">
                                 <button className="btn btn-primary">Info</button>
                             </div>
                         </div>
                         <hr/>
                         <form onSubmit={handleSubmit}>
                             <div className="form-group">
-                                <div class="row mb-2">
-                                    <div class="col-5">
+                                <div className="row mb-2">
+                                    <div className="col-5">
                                         <label htmlFor="sim_name" className="col-form-label">Sim. Name:</label>
                                     </div>
-                                    <div class="col-6">
+                                    <div className="col-6">
                                         <input
                                             type="text"
                                             className="form-control"
@@ -99,11 +99,11 @@ export const Users = () => {
                                 </div>
                             </div>
                             <div className="form-group">
-                                <div class="row mb-2">
-                                    <div class="col-5">
+                                <div className="row mb-2">
+                                    <div className="col-5">
                                         <label htmlFor="n_emisores" className="col-form-label">N° Emitters:</label>
                                     </div>
-                                    <div class="col-6">
+                                    <div className="col-6">
                                         <input
                                             type="number"
                                             className="form-control"
@@ -119,11 +119,11 @@ export const Users = () => {
                                 </div>
                             </div>
                             <div className="form-group">
-                                <div class="row mb-2">
-                                    <div class="col-5">
+                                <div className="row mb-2">
+                                    <div className="col-5">
                                         <label htmlFor="n_receptores" className="col-form-label">N° Receivers:</label>
                                     </div>
-                                    <div class="col-6">
+                                    <div className="col-6">
                                         <input
                                             type="number"
                                             className="form-control"
@@ -138,11 +138,11 @@ export const Users = () => {
                                 </div>
                             </div>
                             <div className="form-group">
-                                <div class="row mb-2">
-                                    <div class="col-5">
+                                <div className="row mb-2">
+                                    <div className="col-5">
                                         <label htmlFor="sens_distance" className="col-form-label">Sensor Distance:</label>
                                     </div>
-                                    <div class="col-6">
+                                    <div className="col-6">
                                         <input
                                             type="number"
                                             className="form-control"
@@ -154,17 +154,17 @@ export const Users = () => {
                                             required
                                         />
                                     </div>
-                                    <div class="col-1">
+                                    <div className="col-1">
                                         <label className="d-md-flex justify-content-md-end col-form-label">mm</label>
                                     </div>
                                 </div>
                             </div>
                             <div className="form-group">
-                                <div class="row mb-2">
-                                    <div class="col-5">
+                                <div className="row mb-2">
+                                    <div className="col-5">
                                         <label htmlFor="sens_gap" className="col-form-label">Sensor Gap:</label>
                                     </div>
-                                    <div class="col-6">
+                                    <div className="col-6">
                                         <input
                                             type="number"
                                             className="form-control"
@@ -176,17 +176,17 @@ export const Users = () => {
                                             required
                                         />
                                     </div>
-                                    <div class="col-1">
+                                    <div className="col-1">
                                         <label className="d-md-flex justify-content-md-end col-form-label">mm</label>
                                     </div>
                                 </div>
                             </div>
                             <div className="form-group">
-                                <div class="row mb-2">
-                                    <div class="col-5">
+                                <div className="row mb-2">
+                                    <div className="col-5">
                                         <label htmlFor="sens_edge_margin" className="col-form-label">Sensor Edge Margin:</label>
                                     </div>
-                                    <div class="col-6">
+                                    <div className="col-6">
                                         <input
                                             type="number"
                                             className="form-control"
@@ -198,17 +198,17 @@ export const Users = () => {
                                             required
                                         />
                                     </div>
-                                    <div class="col-1">
+                                    <div className="col-1">
                                         <label className="d-md-flex justify-content-md-end col-form-label">mm</label>
                                     </div>
                                 </div>
                             </div>
                             <div className="form-group">
-                                <div class="row mb-2">
-                                    <div class="col-5">
+                                <div className="row mb-2">
+                                    <div className="col-5">
                                         <label htmlFor="distance" className="col-form-label">Typical Mesh Size:</label>
                                     </div>
-                                    <div class="col-6">
+                                    <div className="col-6">
                                         <input
                                             type="number"
                                             className="form-control"
@@ -221,17 +221,17 @@ export const Users = () => {
                                             required
                                         />
                                     </div>
-                                    <div class="col-1">
+                                    <div className="col-1">
                                         <label className="d-md-flex justify-content-md-end col-form-label">mm</label>
                                     </div>
                                 </div>
                             </div>
                             <div className="form-group">
-                                <div class="row mb-2">
-                                    <div class="col-5">
+                                <div className="row mb-2">
+                                    <div className="col-5">
                                         <label htmlFor="espesor" className="col-form-label">Plate Thickness:</label>
                                     </div>
-                                    <div class="col-6">
+                                    <div className="col-6">
                                         <input
                                             type="number"
                                             className="form-control"
@@ -243,17 +243,17 @@ export const Users = () => {
                                             required
                                         />
                                     </div>
-                                    <div class="col-1">
+                                    <div className="col-1">
                                         <label className="d-md-flex justify-content-md-end col-form-label">mm</label>
                                     </div>
                                 </div>
                             </div>
                             <div className="form-group">
-                                <div class="row mb-2">
-                                    <div class="col-5">
+                                <div className="row mb-2">
+                                    <div className="col-5">
                                         <label htmlFor="porosidad" className="col-form-label">Porosity</label>
                                     </div>
-                                    <div class="col-6">
+                                    <div className="col-6">
                                         <input
                                             type="number"
                                             className="form-control"
@@ -265,17 +265,17 @@ export const Users = () => {
                                             required
                                         />
                                     </div>
-                                    <div class="col-1">
+                                    <div className="col-1">
                                         <label className="d-md-flex justify-content-md-end col-form-label">%</label>
                                     </div>
                                 </div>
                             </div>
                             <div className="form-group">
-                                <div class="row mb-2">
-                                    <div class="col-5">
+                                <div className="row mb-2">
+                                    <div className="col-5">
                                         <label htmlFor="attenuation" className="col-form-label">Attenuation:</label>
                                     </div>
-                                    <div class="col-6">
+                                    <div className="col-6">
                                         <input
                                             type="number"
                                             className="form-control"
@@ -287,7 +287,7 @@ export const Users = () => {
                                             disabled
                                         />
                                     </div>
-                                    <div class="col-1">
+                                    <div className="col-1">
                                         <label className="d-md-flex justify-content-md-end col-form-label">%</label>
                                     </div>
                                 </div>

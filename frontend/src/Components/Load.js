@@ -156,7 +156,7 @@ export const Load = () => {
                     </p>
                     <hr />
                 </Alert>
-                <div class="d-flex flex-row-reverse">
+                <div className="d-flex flex-row-reverse">
                     <Row xs="auto" >
                         <Col>
                             <Dropdown>
@@ -245,8 +245,8 @@ export const Load = () => {
                         {extended_data.map(extended_data => (
 
                             <a key={extended_data.id}>
-                                {/* <div class="row">
-                                    <div class="col-sm-5">
+                                {/* <div className="row">
+                                    <div className="col-sm-5">
                                         <div className="form-label">Number of emitters: {extended_data.n_transmitter}</div>
                                         <div className="form-label">Number of receivers: {extended_data.n_receiver}</div>
                                         <div className="form-label">Distance betwen last emitter and first receiver: {extended_data.distance}</div>
@@ -254,7 +254,7 @@ export const Load = () => {
                                         <div className="form-label">Porosity: {extended_data.porosity}</div>
                                         <div className="form-label">Status: {extended_data.p_status}</div>
                                     </div>
-                                    <div class="col-sm-5">
+                                    <div className="col-sm-5">
                                         <div className="form-label">{extended_data.n_transmitter}</div>
                                         <div className="form-label">{extended_data.n_receiver}</div>
                                         <div className="form-label">{extended_data.distance}</div>
@@ -263,8 +263,8 @@ export const Load = () => {
                                         <div className="form-label">{extended_data.p_status}</div>
                                     </div>
                                 </div> */}
-                                <div class="col-sm-9">
-                                    <table class="table table-borderless">
+                                <div className="col-sm-9">
+                                    <table className="table table-borderless">
                                         <tbody>
                                             <tr>
                                                 <td>Number of emitters:</td>
