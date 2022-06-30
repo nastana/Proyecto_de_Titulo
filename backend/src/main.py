@@ -185,7 +185,7 @@ def load_data_download(v):
     datadownload1 = datadownload[0]
     print("aber:", datadownload1)
     # #archivo binary
-    shutil.copy("Reidmen Fenics/ipnyb propagation/Files_mat/"+datadownload1, "../../frontend/src/Components/download/matfile.mat")
+    shutil.copy("Reidmen Fenics/ipnyb propagation/Files_mat/"+datadownload1, "../../frontend/src/components/download/matfile.mat")
     
     
     return jsonify(datadownload1)

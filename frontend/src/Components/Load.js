@@ -6,7 +6,7 @@ import Col from "react-bootstrap/Col";
 import Dropdown from 'react-bootstrap/Dropdown';
 import Row from "react-bootstrap/Row";
 import Pagination from './Pagination';
-import filemat from '../Components/download/matfile.mat'
+import filemat from './download/matfile.mat'
 
 const API = process.env.REACT_APP_BACKEND;
 
