@@ -9,7 +9,8 @@ const API = process.env.REACT_APP_BACKEND
 export const CreateSimulation = () => {
     const [sim_name, setSim_name] = useState('')
     const [sens_distance, setSens_distance] = useState('')
-    const [sens_gap, setSens_gap] = useState('')
+    const [emitters_pitch, setEmitter_pitch] = useState('')
+    const [receivers_pitch, setReceivers_pitch] = useState('')
     const [sens_edge_margin, setSens_edge_margin] = useState('')
     const [n_emisores, setN_emisores] = useState('')
     const [n_receptores, setN_receptores] = useState('')
@@ -42,6 +43,7 @@ export const CreateSimulation = () => {
     var imagen = new Image();
     //imagen.onload = imagenCargada;
     imagen.src = "../Imagenes/Untitled Diagram (27).png"
+    
     const handleSubmit = async (e) => {
         //console.log(e)
         e.preventDefault();
@@ -52,6 +54,7 @@ export const CreateSimulation = () => {
                 'Access-Control-Expose-Headers': Location,
                         },
             body: JSON.stringify({
+                sim_name: sim_name,
                 n_transmitter: n_emisores,
                 n_receiver: n_receptores,
                 distance: distance,
@@ -79,7 +82,7 @@ export const CreateSimulation = () => {
 
     return (
         <div className="container p-4">
-            <div className="row align-items-center g-lg-5 py-5">
+            <div className="row align-items-center g-lg-5 py-2">
                 <div className="col-md-10 mx-auto col-lg-5">
                 <div className="card">
                     <div className="card-body">
@@ -178,16 +181,37 @@ export const CreateSimulation = () => {
                             <div className="form-group">
                                 <div className="row mb-2">
                                     <div className="col-5">
-                                        <label htmlFor="sens_gap" className="col-form-label">Sensor Gap:</label>
+                                        <label htmlFor="emitters_pitch" className="col-form-label">Emitters Pitch:</label>
                                     </div>
                                     <div className="col-6">
                                         <input
                                             type="number"
                                             className="form-control"
-                                            id="sens_gap"
+                                            id="emitters_pitch"
                                             placeholder="Enter the sensor gap"
-                                            onChange={e => setSens_gap(e.target.value)}
-                                            value={sens_gap}
+                                            onChange={e => setEmitter_pitch(e.target.value)}
+                                            value={emitters_pitch}
+                                            required
+                                        />
+                                    </div>
+                                    <div className="col-1">
+                                        <label className="d-md-flex justify-content-md-end col-form-label">mm</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="form-group">
+                                <div className="row mb-2">
+                                    <div className="col-5">
+                                        <label htmlFor="receivers_pitch" className="col-form-label">Receivers Pitch:</label>
+                                    </div>
+                                    <div className="col-6">
+                                        <input
+                                            type="number"
+                                            className="form-control"
+                                            id="receivers_pitch"
+                                            placeholder="Enter the sensor gap"
+                                            onChange={e => setReceivers_pitch(e.target.value)}
+                                            value={receivers_pitch}
                                             required
                                         />
                                     </div>
