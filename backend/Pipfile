@@ -10,10 +10,13 @@ marshmallow = "*"
 mysql-connector-python = "*"
 pymysql = "*"
 flask-sqlalchemy = "*"
-flask-mysqldb = "*"
 flask-cors = "*"
 fenics = "*"
 fenics-ffc = "*"
+flask-mysqldb = "*"
+mysql-client = "*"
+scipy = "*"
+python-dotenv = "*"
 
 [dev-packages]
 
