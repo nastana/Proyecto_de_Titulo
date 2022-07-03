@@ -14,7 +14,6 @@ const Pagination = ({ postsPerPage, totalPosts, paginate }) => {
     }
     if (opcion === 1) {
       if (number1 > totalPosts / 10) {
-        number1 = number1
         console.log(number1)
 
       } else {
@@ -32,7 +31,6 @@ const Pagination = ({ postsPerPage, totalPosts, paginate }) => {
         number1 = number1 - 1
         console.log(number1)
       } else {
-        number1 = number1
         console.log("number1 pre:",number1)
       }
 
