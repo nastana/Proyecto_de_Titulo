@@ -8,15 +8,15 @@ import Modali, { useModali } from 'modali';
 const API = process.env.REACT_APP_BACKEND
 export const CreateSimulation = () => {
     const [sim_name, setSim_name] = useState('')
+    const [n_emitters, setN_emitters] = useState('')
+    const [n_receivers, setN_receivers] = useState('')
     const [sens_distance, setSens_distance] = useState('')
     const [emitters_pitch, setEmitter_pitch] = useState('')
     const [receivers_pitch, setReceivers_pitch] = useState('')
     const [sens_edge_margin, setSens_edge_margin] = useState('')
-    const [n_emisores, setN_emisores] = useState('')
-    const [n_receptores, setN_receptores] = useState('')
-    const [distance, setDistance] = useState('')
-    const [espesor, setEspesor] = useState('')
-    const [porosidad, setPorosidad] = useState('')
+    const [mesh_size, setMeshSize] = useState('')
+    const [plate_thickness, setThickness] = useState('')
+    const [porosity, setPorosity] = useState('')
     const [attenuation, setAttenuation] = useState('')
     
     const [show, setShow] = useState(false);
@@ -24,7 +24,11 @@ export const CreateSimulation = () => {
     
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
-
+    
+    var imagen = new Image();
+    //imagen.onload = imagenCargada;
+    imagen.src = "../Imagenes/Untitled Diagram (27).png"
+    
     const [modalInfo, toggleModalInfo] = useModali({
         animated: true,
         overflow: true,
@@ -40,10 +44,6 @@ export const CreateSimulation = () => {
         ],
       });
     
-    var imagen = new Image();
-    //imagen.onload = imagenCargada;
-    imagen.src = "../Imagenes/Untitled Diagram (27).png"
-    
     const handleSubmit = async (e) => {
         //console.log(e)
         e.preventDefault();
@@ -55,12 +55,17 @@ export const CreateSimulation = () => {
                         },
             body: JSON.stringify({
                 sim_name: sim_name,
-                n_transmitter: n_emisores,
-                n_receiver: n_receptores,
-                distance: distance,
-                plate_thickness: espesor,
-                porosity: porosidad,
-                status: "Not started"
+                n_emitters: n_emitters,
+                n_receivers: n_receivers,
+                sens_distance: sens_distance,
+                emitters_pitch: emitters_pitch,
+                receivers_pitch: receivers_pitch,
+                sens_edge_margin: sens_edge_margin,
+                mesh_size: mesh_size,
+                plate_thickness: plate_thickness,
+                porosity: porosity,
+                attenuation: attenuation,
+                status: 0
             })
         })
         console.log(response.headers.get('Location'))
@@ -70,7 +75,7 @@ export const CreateSimulation = () => {
         return "response"
     }
     const datacheck = async () => {
-        if (n_emisores === '' || n_receptores === ''  || espesor === '' || porosidad === '') {
+        if (n_emitters === '' || n_receivers === ''  || plate_thickness === '' || porosity === '') {
             <div className="alert alert-danger">
                 <strong>Danger!</strong> Indicates a dangerous or potentially negative action.
             </div>
@@ -131,8 +136,8 @@ export const CreateSimulation = () => {
                                             className="form-control"
                                             id="n_emisores"
                                             placeholder="Enter your emitter number"
-                                            onChange={e => setN_emisores(e.target.value)}
-                                            value={n_emisores}
+                                            onChange={e => setN_emitters(e.target.value)}
+                                            value={n_emitters}
                                             min = "0"
                                             required
                                         />
@@ -150,8 +155,8 @@ export const CreateSimulation = () => {
                                             className="form-control"
                                             id="n_receptores"
                                             placeholder="Enter your receivers number"
-                                            onChange={e => setN_receptores(e.target.value)}
-                                            value={n_receptores}
+                                            onChange={e => setN_receivers(e.target.value)}
+                                            value={n_receivers}
                                             required
                                         />
                                     </div>
@@ -252,8 +257,8 @@ export const CreateSimulation = () => {
                                             className="form-control"
                                             id="distance"
                                             placeholder="Enter Typical Mesh Size"
-                                            onChange={e => setDistance(e.target.value)}
-                                            value={distance}
+                                            onChange={e => setMeshSize(e.target.value)}
+                                            value={mesh_size}
                                             step = "0.1"
                                             required
                                         />
@@ -274,8 +279,8 @@ export const CreateSimulation = () => {
                                             className="form-control"
                                             id="espesor"
                                             placeholder="Enter your plate thickness"
-                                            onChange={e => setEspesor(e.target.value)}
-                                            value={espesor}
+                                            onChange={e => setThickness(e.target.value)}
+                                            value={plate_thickness}
                                             required
                                         />
                                     </div>
@@ -295,8 +300,8 @@ export const CreateSimulation = () => {
                                             className="form-control"
                                             id="porosidad"
                                             placeholder="Enter your Porosity"
-                                            onChange={e => setPorosidad(e.target.value)}
-                                            value={porosidad}
+                                            onChange={e => setPorosity(e.target.value)}
+                                            value={porosity}
                                             required
                                         />
                                     </div>
