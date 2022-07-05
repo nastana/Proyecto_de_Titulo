@@ -64,7 +64,8 @@ export const CreateSimulation = () => {
                 mesh_size: mesh_size,
                 plate_thickness: plate_thickness,
                 porosity: porosity,
-                attenuation: attenuation,
+                attenuation: 0,
+                sensor_width: 0.8,
                 status: 0
             })
         })

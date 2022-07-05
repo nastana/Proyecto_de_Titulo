@@ -2,7 +2,7 @@
 #from sqlalchemy import schema
 #from .entities.entity import Session, engine, Base
 #from .entities.exam import Exam, ExamSchema
-from time import strftime,gmtime
+from datetime import date, datetime
 from dis import dis
 from http.client import NON_AUTHORITATIVE_INFORMATION
 from flask import Flask, jsonify, request, flash
@@ -70,7 +70,6 @@ def Index():
     print(cursor)
     return '<h1>Hello world<h1>'
 
-
 @app.route('/Input_data', methods=['POST'])
 def input_data():
     name_simulation = request.json['sim_name']
@@ -82,14 +81,12 @@ def input_data():
     sens_edge_margin = request.json['sens_edge_margin']
     mesh_size = request.json['mesh_size']
     plate_thickness = request.json['plate_thickness']
-    plate_size = (float(sens_edge_margin) + (int(n_emitters) * 0.8) + ((int(n_emitters) - 1) * float(emitters_pitch)) + float(sens_distance) + (int(n_receivers) * 0.8) + ((int(n_receivers) - 1) * float(receivers_pitch)) + float(sens_edge_margin))
+    sensor_width = request.json['sensor_width']
+    plate_size = (float(sens_edge_margin) + (int(n_emitters) * float(sensor_width)) + ((int(n_emitters) - 1) * float(emitters_pitch)) + float(sens_distance) + (int(n_receivers) * float(sensor_width)) + ((int(n_receivers) - 1) * float(receivers_pitch)) + float(sens_edge_margin))
     porosity = request.json['porosity']
-    #attenuation = request.json['attenuation']
-    attenuation = "0"
-    status = "0"
-    cod_simulation = strftime("%Y%m%d", gmtime())
-    print(plate_size)
-    print(cod_simulation)
+    attenuation = request.json['attenuation']
+    status = request.json['status']
+    cod_simulation = '{d:%y}{d.month}{d.day}{d.hour}{d.minute:02}'.format(d=datetime.now())
 
     cur = mysql.connection.cursor()
 
@@ -110,7 +107,7 @@ def input_data():
 def load_data():
     data_t = []
     cur = mysql.connection.cursor()
-    cur.execute('SELECT ID_SIMULATION, NAME_SIMULATION, START_DATETIME, COD_SIMULATION, N_EMITTER, N_RECEIVER, TYPICAL_MESH_SIZE, PLATE_THICKNESS, PLATE_SIZE, POROSITY, ATTENUATION, P_STATUS FROM SIMULATION')
+    cur.execute('SELECT ID_SIMULATION, NAME_SIMULATION, DATE_FORMAT(START_DATETIME, "%d-%m-%Y %H:%i:%S "), COD_SIMULATION, N_EMITTER, N_RECEIVER, TYPICAL_MESH_SIZE, PLATE_THICKNESS, PLATE_SIZE, POROSITY, ATTENUATION, P_STATUS FROM SIMULATION')
     data = cur.fetchall()
     cur.close()
 
