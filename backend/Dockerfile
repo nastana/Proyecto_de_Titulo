@@ -1,6 +1,6 @@
 FROM ubuntu:20.04
 
-MAINTAINER FelipeCastro "felipe.castroa@alumnos.uv.cl"
+LABEL maintainer="JeremyCastro jeremy.castroe@alumnos.uv.cl"
 
 ENV DEBIAN_FRONTEND noninteractive
 

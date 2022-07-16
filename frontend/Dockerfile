@@ -2,7 +2,7 @@
 FROM node:12.18.3
 
 LABEL version="1.0"
-LABEL maintainer = ["felipe.castroa@alumnos.uv.cl"]
+LABEL maintainer = ["jeremy.castroe@alumnos.uv.cl"]
 
 WORKDIR /src
 
