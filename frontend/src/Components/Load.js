@@ -108,9 +108,9 @@ export const Load = () => {
                     'Content-Type': 'application/Json'
                 },
                 body: JSON.stringify({
-                    n_transmitter: extended_data[0]['n_transmitter'],
-                    n_receiver: extended_data[0]['n_receiver'],
-                    distance: extended_data[0]['distance'],
+                    n_emitters: extended_data[0]['n_emitter'],
+                    n_receivers: extended_data[0]['n_receiver'],
+                    sens_distance: extended_data[0]['sensor_distance'],
                     plate_thickness: extended_data[0]['plate_thickness'],
                     porosity: extended_data[0]['porosity']
                 })
@@ -137,7 +137,7 @@ export const Load = () => {
         setShow(false)
         const resDownload = await fetch(`${API}/Load_data/download/${id}`)
         const aer = await resDownload.json()
-        console.log("a",aer)
+        console.log("a", aer)
         setdataDownload(aer)
         //const download = await res.json()
         handleShowd()
@@ -146,7 +146,6 @@ export const Load = () => {
 
     return (
         <div>
-
             <Container fluid>
                 <Alert variant="success">
                     <Alert.Heading>Hey, nice to see you</Alert.Heading>
@@ -191,26 +190,38 @@ export const Load = () => {
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Number of emitters</th>
-                                <th>Number of receivers</th>
+                                <th>Name</th>
+                                <th>Started at</th>
+                                <th>Code</th>
+                                <th>N° Emitters</th>
+                                <th>N° Receivers</th>
                                 <th>Typical Mesh Size</th>
-                                <th>Plate thickness</th>
+                                <th>Plate Thickness</th>
+                                <th>Plate Size</th>
                                 <th>Porosity</th>
-                                <th>Results</th>
+                                <th>Attenuation</th>
+                                <th>Status</th>
+                                <th>Details</th>
                             </tr>
                         </thead>
                         <tbody>
                             {currentPosts.map(currentPosts => (
-                                <tr key={currentPosts.id}>
-                                    <td>{currentPosts.id}</td>
-                                    <td>{currentPosts.n_transmitter}</td>
+                                <tr key={currentPosts.id_simulation}>
+                                    <td>{currentPosts.id_simulation}</td>
+                                    <td>{currentPosts.name_simulation}</td>
+                                    <td>{currentPosts.start_datetime}</td>
+                                    <td>{currentPosts.cod_simulation}</td>
+                                    <td>{currentPosts.n_emitter}</td>
                                     <td>{currentPosts.n_receiver}</td>
-                                    <td>{currentPosts.distance}</td>
+                                    <td>{currentPosts.typical_mesh_size}</td>
                                     <td>{currentPosts.plate_thickness}</td>
+                                    <td>{currentPosts.plate_size}</td>
                                     <td>{currentPosts.porosity}</td>
+                                    <td>{currentPosts.attenuation}</td>
+                                    <td>{currentPosts.p_status}</td>
                                     <td>
                                         {/* <Button className="btn btn-primary my-2" onClick={handleShow} >View Info</Button> */}
-                                        <Button onClick={() => viewInfo(currentPosts.id)}>
+                                        <Button onClick={() => viewInfo(currentPosts.id_simulation)}>
                                             View Info
                                         </Button>
                                         {/* <a href="TimeSimP6TransIsoW1.0M350" download>
@@ -237,79 +248,184 @@ export const Load = () => {
                     </div>
 
                 </div>
+
+
+
                 <Modal show={show} onHide={handleClose}>
                     <Modal.Header closeButton>
-                        <Modal.Title>Status</Modal.Title>
+                        <Modal.Title>Details</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
                         {extended_data.map(extended_data => (
 
-                            <a key={extended_data.id}>
-                                {/* <div className="row">
-                                    <div className="col-sm-5">
-                                        <div className="form-label">Number of emitters: {extended_data.n_transmitter}</div>
-                                        <div className="form-label">Number of receivers: {extended_data.n_receiver}</div>
-                                        <div className="form-label">Distance betwen last emitter and first receiver: {extended_data.distance}</div>
-                                        <div className="form-label">Plate Thickness: {extended_data.plate_thickness}</div>
-                                        <div className="form-label">Porosity: {extended_data.porosity}</div>
-                                        <div className="form-label">Status: {extended_data.p_status}</div>
+                            <a key={extended_data.id_simulation}>
+                                <div className='container'>
+                                    <div className='row mb-2'>
+                                        <div className='col-6'>
+                                            <label>Simulation Name:</label>
+                                        </div>
+                                        <div className='col-6'>
+                                            <label>{extended_data.name_simulation}</label>
+                                        </div>
                                     </div>
-                                    <div className="col-sm-5">
-                                        <div className="form-label">{extended_data.n_transmitter}</div>
-                                        <div className="form-label">{extended_data.n_receiver}</div>
-                                        <div className="form-label">{extended_data.distance}</div>
-                                        <div className="form-label">{extended_data.plate_thickness}</div>
-                                        <div className="form-label">{extended_data.porosity}</div>
-                                        <div className="form-label">{extended_data.p_status}</div>
+                                    <div className='row mb-2'>
+                                        <div className='col-6'>
+                                            <label>Simulation Code:</label>
+                                        </div>
+                                        <div className='col-6'>
+                                            <label>{extended_data.cod_simulation}</label>
+                                        </div>
                                     </div>
-                                </div> */}
-                                <div className="col-sm-9">
-                                    <table className="table table-borderless">
-                                        <tbody>
-                                            <tr>
-                                                <td>Number of emitters:</td>
-                                                <td>{extended_data.n_transmitter}</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Number of receivers:</td>
-                                                <td>{extended_data.n_receiver}</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Typical Mesh Size (mm):</td>
-                                                <td>{extended_data.distance}</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Plate Thickness:</td>
-                                                <td>{extended_data.plate_thickness}</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Porosity:</td>
-                                                <td>{extended_data.porosity}</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Time Ejecution [HH:MM:SS] </td>
-                                                <td>{extended_data.time}</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Status:</td>
-                                                <td>{extended_data.p_status}</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                                    <div className='row mb-2'>
+                                        <div className='col-6'>
+                                            <label>Sim. Start Date:</label>
+                                        </div>
+                                        <div className='col-6'>
+                                            <label>{extended_data.start_datetime}</label>
+                                        </div>
+                                    </div>
+                                    <hr />
+                                    <div className='row mb-2'>
+                                        <div className='col-6'>
+                                            <label>N° Emitters:</label>
+                                        </div>
+                                        <div className='col-6'>
+                                            <label>{extended_data.n_emitter}</label>
+                                        </div>
+                                    </div>
+                                    <div className='row mb-2'>
+                                        <div className='col-6'>
+                                            <label>N° Receivers:</label>
+                                        </div>
+                                        <div className='col-6'>
+                                            <label>{extended_data.n_receiver}</label>
+                                        </div>
+                                    </div>
+                                    <div className='row mb-2'>
+                                        <div className='col-6'>
+                                            <label>Emitter Pitch:</label>
+                                        </div>
+                                        <div className='col-2'>
+                                            <label>{extended_data.emitter_pitch} </label>
+                                        </div>
+                                        <div className='col-1'>
+                                            <label>[mm]</label>
+                                        </div>
+                                    </div>
+                                    <div className='row mb-2'>
+                                        <div className='col-6'>
+                                            <label>Receiver Pitch:</label>
+                                        </div>
+                                        <div className='col-2'>
+                                            <label>{extended_data.receiver_pitch}</label>
+                                        </div>
+                                        <div className='col-1'>
+                                            <label>[mm]</label>
+                                        </div>
+                                    </div>
+                                    <div className='row mb-2'>
+                                        <div className='col-6'>
+                                            <label>Distance Between Arrays:</label>
+                                        </div>
+                                        <div className='col-2'>
+                                            <label>{extended_data.sensor_distance}</label>
+                                        </div>
+                                        <div className='col-1'>
+                                            <label>[mm]</label>
+                                        </div>
+                                    </div>
+                                    <div className='row mb-2'>
+                                        <div className='col-6'>
+                                            <label>Sensor Edge Margin:</label>
+                                        </div>
+                                        <div className='col-2'>
+                                            <label>{extended_data.sensor_edge_margin}</label>
+                                        </div>
+                                        <div className='col-1'>
+                                            <label>[mm]</label>
+                                        </div>
+                                    </div>
+                                    <div className='row mb-2'>
+                                        <div className='col-6'>
+                                            <label>Plate Size:</label>
+                                        </div>
+                                        <div className='col-2'>
+                                            <label>{extended_data.plate_size}</label>
+                                        </div>
+                                        <div className='col-1'>
+                                            <label>[mm]</label>
+                                        </div>
+                                    </div>
+                                    <div className='row mb-2'>
+                                        <div className='col-6'>
+                                            <label>Plate Thickness:</label>
+                                        </div>
+                                        <div className='col-2'>
+                                            <label>{extended_data.plate_thickness}</label>
+                                        </div>
+                                        <div className='col-1'>
+                                            <label>[mm]</label>
+                                        </div>
+                                    </div>
+                                    <div className='row mb-2'>
+                                        <div className='col-6'>
+                                            <label>Typical Mesh Size:</label>
+                                        </div>
+                                        <div className='col-2'>
+                                            <label>{extended_data.typical_mesh_size}</label>
+                                        </div>
+                                        <div className='col-1'>
+                                            <label>[mm]</label>
+                                        </div>
+                                    </div>
+                                    <div className='row mb-2'>
+                                        <div className='col-6'>
+                                            <label>Porosity:</label>
+                                        </div>
+                                        <div className='col-2'>
+                                            <label>{extended_data.porosity}</label>
+                                        </div>
+                                        <div className='col-1'>
+                                            <label>[%]</label>
+                                        </div>
+                                    </div>
+                                    <div className='row mb-2'>
+                                        <div className='col-6'>
+                                            <label>Attenuation:</label>
+                                        </div>
+                                        <div className='col-2'>
+                                            <label>{extended_data.attenuation} %</label>
+                                        </div>
+                                        <div className='col-1'>
+                                            <label>[%]</label>
+                                        </div>
+                                    </div>
+                                    <hr />
+                                    <div className='row mb-2'>
+                                        <div className='col-5'>
+                                            <label>Status:</label>
+                                        </div>
+                                        <div className='col-7'>
+                                            <label>{extended_data.p_status}</label>
+                                        </div>
+                                    </div>
+                                    {
+                                        extended_data.p_status === "In Progress" ?
+                                        <div className='row mb-2'>
+                                            <div class="progress">
+                                                <div class="progress-bar" role="progressbar" style={{width: "25%"}} aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                                            </div>
+                                        </div> : null
+                                    }
                                 </div>
-
                                 <Modal.Footer>
                                     {/* {if (extended_data.p_status == "not started") { */}
-                                    {extended_data.p_status == "Not started"
-                                        ? <Button onClick={() => startSimultation(extended_data.id)}> Start Simulation </Button>
-                                        : (
-                                            extended_data.p_status == "In progress"
-                                                ? <Button variant="warning" disabled> Wait </Button>
-                                                :
-                                                <Button onClick={() => downloadSimulation(extended_data.id)} >Download
-                                                </Button>
-                                            /* <a download="TimeSimP6TransIsoW1.0M350" href="/path/to/image" title="ImageName"><Button variant="success" download> donwload </Button></a> */
-                                        )}
+                                    {extended_data.p_status === "Not Started" ? <Button onClick={() => startSimultation(extended_data.id_simulation)}> Start Simulation </Button> : (
+                                        extended_data.p_status === "In Progress" ? <Button variant="warning" disabled> Wait </Button> :
+                                            <Button onClick={() => downloadSimulation(extended_data.id_simulation)} >Download
+                                            </Button>
+                                        /* <a download="TimeSimP6TransIsoW1.0M350" href="/path/to/image" title="ImageName"><Button variant="success" download> donwload </Button></a> */
+                                    )}
                                     {/* } */}
                                     {/* {customButton} */}
                                     {/* <Button onClick={() => test()}> Test </Button> */}

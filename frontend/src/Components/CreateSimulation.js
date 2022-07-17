@@ -166,7 +166,7 @@ export const CreateSimulation = () => {
                             <div className="form-group">
                                 <div className="row mb-2">
                                     <div className="col-5">
-                                        <label htmlFor="sens_distance" className="col-form-label">Sensor Distance:</label>
+                                        <label htmlFor="sens_distance" className="col-form-label">Distance Between Arrays:</label>
                                     </div>
                                     <div className="col-6">
                                         <input
