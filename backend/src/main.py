@@ -18,7 +18,10 @@ import os
 from dotenv import load_dotenv
 
 load_dotenv()
-sys.path.insert(1, 'src/Reidmen Fenics/ipnyb propagation')
+sys.path.append("Reidmen Fenics/ipnyb propagation")
+print(sys.path)
+#fmain = __import__("TimeSimTransIsoMatCij2D_test")
+
 
 
 #from Reidmen_Fenics.ipnyb_propagation.TimeSimTransIsoMatCij2D_test import fmain
@@ -47,8 +50,8 @@ app.config['MYSQL_DB'] = os.getenv('MYSQL_DB') # proyecto-v01 para win y proyect
 app.config['CORS_HEADERS'] = os.getenv('CORS_HEADERS') """
 
 app.config['MYSQL_HOST'] = '127.0.0.1'
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = ''
+app.config['MYSQL_USER'] = 'simUser'
+app.config['MYSQL_PASSWORD'] = 'simPassword'
 app.config['MYSQL_PORT'] =  3306
 app.config['MYSQL_DB'] = 'proyecto_v02' # proyecto-v01 para win y proyecto_v01 para linux
 app.config['CORS_HEADERS'] = 'Content-Type'
@@ -81,8 +84,9 @@ def input_data():
     sens_edge_margin = request.json['sens_edge_margin']
     mesh_size = request.json['mesh_size']
     plate_thickness = request.json['plate_thickness']
-    sensor_width = request.json['sensor_width']
-    plate_size = (float(sens_edge_margin) + (int(n_emitters) * float(sensor_width)) + ((int(n_emitters) - 1) * float(emitters_pitch)) + float(sens_distance) + (int(n_receivers) * float(sensor_width)) + ((int(n_receivers) - 1) * float(receivers_pitch)) + float(sens_edge_margin))
+    sensor_width = request.json['sensor_width'] #Max value = sensor pitch ==> Width <= Pitch
+
+    plate_size = (float(sens_edge_margin) + (int(n_emitters) * float(emitters_pitch)) + float(sens_distance) + ((int(n_receivers)) * float(receivers_pitch)) + float(sens_edge_margin))
     porosity = request.json['porosity']
     attenuation = request.json['attenuation']
     status = request.json['status']
@@ -90,7 +94,7 @@ def input_data():
 
     cur = mysql.connection.cursor()
 
-    sql = "INSERT INTO simulation (name_simulation, cod_simulation, n_emitter, n_receiver, sensor_distance, emitter_pitch, receiver_pitch, sensor_edge_margin, typical_mesh_size, plate_thickness, plate_size, porosity, attenuation, p_status) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);"
+    sql = "INSERT INTO SIMULATION (name_simulation, cod_simulation, n_emitter, n_receiver, sensor_distance, emitter_pitch, receiver_pitch, sensor_edge_margin, typical_mesh_size, plate_thickness, plate_size, porosity, attenuation, p_status) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);"
     val = (name_simulation, cod_simulation, n_emitters, n_receivers, sens_distance, emitters_pitch, receivers_pitch, sens_edge_margin, mesh_size, plate_thickness, plate_size, porosity, attenuation, status)
     cur.execute(sql, val)
 
@@ -235,26 +239,30 @@ def load_data_download(v):
 def load_result_id_put(id):
     sub_id = id
     
-    n_transmitter = request.json['n_transmitter']
-    n_receiver = request.json['n_receiver']
-    distance = request.json['distance']
+    n_emitters = request.json['n_emitters']
+    n_receivers = request.json['n_receivers']
+    sens_distance = request.json['sens_distance']
+
     plate_thickness = request.json['plate_thickness']
     porosity = request.json['porosity']
+
     cur = mysql.connection.cursor()
-    cur.execute("UPDATE timesimtransisomat_first_step01 SET p_status = 'In progress'  WHERE id = {0};".format(sub_id))
+    cur.execute("UPDATE SIMULATION SET p_status = '1' WHERE ID_SIMULATION = {0};".format(sub_id))
     mysql.connection.commit()
    
-  
-    filename,time = fmain(n_transmitter,n_receiver,distance,plate_thickness,porosity,sub_id)
+    filename,time = TimeSimTransIsoMatCij2D_test.fmain(n_emitters, n_receivers, sens_distance, plate_thickness, porosity, sub_id)
     print("Nombre archivo",filename)
     # with open(filename,"rb") as d:
     #     datar = d.read()
     # print(type(datar))
     # print(type(time))
     cur = mysql.connection.cursor()
-    sql = "UPDATE timesimtransisomat_first_step01 SET result_step_01 = %s, p_status = 'Done', time = %s  WHERE id = %s;"
-    cur.execute(sql,(filename,time,sub_id))
+    sql = "INSERT INTO RESULT_MAT (RESULT_STEP_01, ID_SIMULATION) VALUE (%s, %s);"
+    cur.execute(sql,(filename, sub_id))
+    cur.execute("UPDATE SIMULATION SET time = %s WHERE id = {0};".format(sub_id))
+    cur.execute(sql, time)
     mysql.connection.commit()
+    cur.close();
     return('Ok')
     
    
