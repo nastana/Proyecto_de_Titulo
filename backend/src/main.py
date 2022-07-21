@@ -219,9 +219,8 @@ def load_data_distance(v):
 
 @app.route('/Load_data/download/<v>', methods=['GET'])
 def load_data_download(v):
-    #print(request)
     cur = mysql.connection.cursor()
-    cur.execute("select result_step_01 from timesimtransisomat_first_step01 WHERE id = {0}".format(v))
+    cur.execute("SELECT RESULT_STEP_01 FROM RESULT_MAT WHERE ID_SIMULATION = {0}".format(v))
     datadownload = cur.fetchone()
     datadownload1 = datadownload[0]
     print("aber:", datadownload1)
@@ -247,21 +246,23 @@ def load_result_id_put(id):
     porosity = request.json['porosity']
 
     cur = mysql.connection.cursor()
-    cur.execute("UPDATE SIMULATION SET p_status = '1' WHERE ID_SIMULATION = {0};".format(sub_id))
+    cur.execute('UPDATE SIMULATION SET p_status = %s, start_datetime = %s WHERE ID_SIMULATION = %s', ('1', datetime.now(), sub_id))
     mysql.connection.commit()
    
-    filename,time = TimeSimTransIsoMatCij2D_test.fmain(n_emitters, n_receivers, sens_distance, plate_thickness, porosity, sub_id)
-    print("Nombre archivo",filename)
+    #filename,time = TimeSimTransIsoMatCij2D_test.fmain(n_emitters, n_receivers, sens_distance, plate_thickness, porosity, sub_id)
+    #print("Nombre archivo",filename)
+    
     # with open(filename,"rb") as d:
     #     datar = d.read()
     # print(type(datar))
     # print(type(time))
-    cur = mysql.connection.cursor()
-    sql = "INSERT INTO RESULT_MAT (RESULT_STEP_01, ID_SIMULATION) VALUE (%s, %s);"
-    cur.execute(sql,(filename, sub_id))
-    cur.execute("UPDATE SIMULATION SET time = %s WHERE id = {0};".format(sub_id))
-    cur.execute(sql, time)
-    mysql.connection.commit()
+    
+    #cur = mysql.connection.cursor()
+    #sql = "INSERT INTO RESULT_MAT (RESULT_STEP_01, ID_SIMULATION) VALUE (%s, %s);"
+    #cur.execute(sql,(filename, sub_id))
+    #cur.execute("UPDATE SIMULATION SET time = %s WHERE id = {0};".format(sub_id))
+    #cur.execute(sql, time)
+    #mysql.connection.commit()
     cur.close();
     return('Ok')
     

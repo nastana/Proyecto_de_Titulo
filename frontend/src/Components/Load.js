@@ -1,12 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Container, Modal } from 'react-bootstrap';
-//import {Alert} from 'react-bootstrap'
-import Alert from 'react-bootstrap/Alert';
-import Col from "react-bootstrap/Col";
-import Dropdown from 'react-bootstrap/Dropdown';
-import Row from "react-bootstrap/Row";
+import { Button, Container, Modal, ProgressBar, Spinner, Dropdown, Col, Row, Alert } from 'react-bootstrap';
 import Pagination from './Pagination';
 import filemat from './download/matfile.mat'
+import Modali, { useModali } from 'modali';
+import ModalInfo from './ModalInfo';
 
 const API = process.env.REACT_APP_BACKEND;
 
@@ -30,8 +27,6 @@ export const Load = () => {
     const handleShow = () => setShow(true);
 
     const [dataDownload, setdataDownload] = useState([]);
-
-
 
     const getSim = async (v) => {
         if (v === 0 || searchInput === '') {
@@ -70,7 +65,6 @@ export const Load = () => {
         }
 
     }
-
 
     useEffect(() => {
         getSim(0);
@@ -116,21 +110,6 @@ export const Load = () => {
                 })
             });
         }
-
-
-        // var dataArray = new Array();
-        // for (var o in extended_data) {
-        //     dataArray.Push(extended_data[o]);
-        // }
-        // console.log(extended_data)
-        // console.log(extended_data['n_transmitter'])
-        //console.log(JSON.parse(extended_data[]))
-
-
-
-
-        //console.log("okis")
-
     }
 
     const downloadSimulation = async (id) => {
@@ -143,6 +122,20 @@ export const Load = () => {
         handleShowd()
     }
 
+    const [modalInfo, toggleModalInfo] = useModali({
+        animated: true,
+        overflow: true,
+        centered: true,
+        large: true,
+        title: "Parameter's Description",
+        buttons: [
+          <Modali.Button
+            label="Close"
+            isStyleDefault
+            onClick={() => toggleModalInfo()}
+          />,
+        ],
+      });
 
     return (
         <div>
@@ -155,37 +148,52 @@ export const Load = () => {
                     </p>
                     <hr />
                 </Alert>
-                <div className="d-flex flex-row-reverse">
-                    <Row xs="auto" >
-                        <Col>
-                            <Dropdown>
-                                <Dropdown.Toggle variant="secondary" size="sm" id="dropdown-basic" >
-                                    Select your search
-                                </Dropdown.Toggle>
-                                <Dropdown.Menu>
-                                    <Dropdown.Item onClick={e => setSearch('ID')}>ID</Dropdown.Item>
-                                    <Dropdown.Item onClick={e => setSearch('Porosity')}>Porosity</Dropdown.Item>
-                                    <Dropdown.Item onClick={e => setSearch('Distance')}>Distance</Dropdown.Item>
-                                </Dropdown.Menu>
-                            </Dropdown>
-                        </Col>
-                        <Col xs>
-                            <input
-                                type="number"
-                                placeholder={search}
-                                onChange={e => setsearchInput(e.target.value)}
-                            />
-                        </Col>
-                        <Col>
-                            <Button variant="primary" size="sm" onClick={e => getSim(search)} paginate={1}>
-                                Search
-                            </Button>
-                        </Col>
-                    </Row>
-                </div>
-
+                <Row>
+                    <Col>
+                        <Button variant="primary" clasName='justify-content-md-start' href="/input">Start a new Simulation</Button>
+                    </Col>
+                    <Col>
+                        <div className="d-flex flex-row-reverse">
+                            <Row xs="auto" >
+                                <Col>
+                                    <button className='btn btn-primary' onClick={toggleModalInfo}>
+                                        Parameters Info
+                                    </button>
+                                    <Modali.Modal {...modalInfo}>
+                                        <ModalInfo/>
+                                    </Modali.Modal>
+                                </Col>
+                                <Col>
+                                    <Dropdown>
+                                        <Dropdown.Toggle variant="secondary" size="md" id="dropdown-basic" >
+                                            Select your search
+                                        </Dropdown.Toggle>
+                                        <Dropdown.Menu>
+                                            <Dropdown.Item onClick={e => setSearch('ID')}>ID</Dropdown.Item>
+                                            <Dropdown.Item onClick={e => setSearch('Porosity')}>Porosity</Dropdown.Item>
+                                            <Dropdown.Item onClick={e => setSearch('Distance')}>Distance</Dropdown.Item>
+                                        </Dropdown.Menu>
+                                    </Dropdown>
+                                </Col>
+                                <Col xs>
+                                    <input
+                                        type="number"
+                                        className="form-text form-control"
+                                        placeholder={search}
+                                        onChange={e => setsearchInput(e.target.value)}
+                                    />
+                                </Col>
+                                <Col>
+                                    <Button variant="primary" size="md" onClick={e => getSim(search)} paginate={1}>
+                                        Search
+                                    </Button>
+                                </Col>
+                            </Row>
+                        </div>
+                    </Col>
+                </Row>
+                <br/>
                 <div className="col md-6">
-                    {/*<script src="https://unpkg.com/bootstrap-table@1.18.3/dist/bootstrap-table-locale-all.min.js"></script>*/}
                     <table className="table table-striped" data-pagination="true" data-show-pagination-switch="true" responsive>
                         <thead>
                             <tr>
@@ -230,7 +238,6 @@ export const Load = () => {
                                             </button>
                                         </a> */}
                                     </td>
-
                                 </tr>
                             ))}
                         </tbody>
@@ -240,7 +247,7 @@ export const Load = () => {
                 <div clasName="container">
                     <div className="row">
                         <div className="col">
-                            <Button variant="secondary" clasName='justify-content-md-start' href="/">Back</Button>
+                            <Button variant="secondary" clasName='justify-content-md-start' href="/">Back to Main Menu</Button>
                         </div>
                         <div className="col">
                             <Pagination postsPerPage={postPerPage} totalPosts={sim.length} paginate={paginate} />
@@ -394,41 +401,46 @@ export const Load = () => {
                                             <label>Attenuation:</label>
                                         </div>
                                         <div className='col-2'>
-                                            <label>{extended_data.attenuation} %</label>
+                                            <label>{extended_data.attenuation}</label>
                                         </div>
                                         <div className='col-1'>
                                             <label>[%]</label>
                                         </div>
                                     </div>
                                     <hr />
-                                    <div className='row mb-2'>
-                                        <div className='col-5'>
+                                    <div className='row mb-3'>
+                                        <div className='col-6'>
                                             <label>Status:</label>
                                         </div>
-                                        <div className='col-7'>
-                                            <label>{extended_data.p_status}</label>
+                                        <div className='col-3'>
+                                            <label>{extended_data.p_status}
+                                            </label>
                                         </div>
+                                        { extended_data.p_status === "In Progress" ?
+                                        <div className='col-1'>
+                                            <Spinner
+                                            as="span"
+                                            variant="primary"
+                                            size="sm"
+                                            role="status"
+                                            aria-hidden="true"
+                                            animation="border"/>
+                                        </div> : null }
                                     </div>
-                                    {
-                                        extended_data.p_status === "In Progress" ?
-                                        <div className='row mb-2'>
-                                            <div class="progress">
-                                                <div class="progress-bar" role="progressbar" style={{width: "25%"}} aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-                                            </div>
-                                        </div> : null
-                                    }
+                                    {extended_data.p_status === "In Progress" ?
+                                    <div className='row mb-3'>
+                                        <ProgressBar now={75} />
+                                    </div> : null }
                                 </div>
                                 <Modal.Footer>
-                                    {/* {if (extended_data.p_status == "not started") { */}
                                     {extended_data.p_status === "Not Started" ? <Button onClick={() => startSimultation(extended_data.id_simulation)}> Start Simulation </Button> : (
-                                        extended_data.p_status === "In Progress" ? <Button variant="warning" disabled> Wait </Button> :
-                                            <Button onClick={() => downloadSimulation(extended_data.id_simulation)} >Download
+                                        extended_data.p_status === "Done" ?
+                                        <div>
+                                            <Button className='me-2' onClick={() => downloadSimulation(extended_data.id_simulation)} >Download
                                             </Button>
-                                        /* <a download="TimeSimP6TransIsoW1.0M350" href="/path/to/image" title="ImageName"><Button variant="success" download> donwload </Button></a> */
+                                            <a href={'/results/' + extended_data.id_simulation}  className="btn btn-primary">View Result</a>
+                                        </div> : null
                                     )}
-                                    {/* } */}
-                                    {/* {customButton} */}
-                                    {/* <Button onClick={() => test()}> Test </Button> */}
                                     <Button variant="secondary" onClick={handleClose}>
                                         Close
                                     </Button>
@@ -437,9 +449,6 @@ export const Load = () => {
 
                         ))}
                     </Modal.Body>
-
-
-
                 </Modal>
                 <Modal show={showd} onHide={handleClosed}>
                     <Modal.Header closeButton>

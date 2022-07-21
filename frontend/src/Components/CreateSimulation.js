@@ -173,7 +173,7 @@ export const CreateSimulation = () => {
                                             type="number"
                                             className="form-control"
                                             id="sens_distance"
-                                            placeholder="Enter the sensor distance"
+                                            placeholder="Enter the distance between arrays"
                                             onChange={e => setSens_distance(e.target.value)}
                                             value={sens_distance}
                                             required
@@ -194,7 +194,7 @@ export const CreateSimulation = () => {
                                             type="number"
                                             className="form-control"
                                             id="emitters_pitch"
-                                            placeholder="Enter the sensor gap"
+                                            placeholder="Enter the emitter pitch"
                                             onChange={e => setEmitter_pitch(e.target.value)}
                                             value={emitters_pitch}
                                             required
@@ -215,7 +215,7 @@ export const CreateSimulation = () => {
                                             type="number"
                                             className="form-control"
                                             id="receivers_pitch"
-                                            placeholder="Enter the sensor gap"
+                                            placeholder="Enter the receiver pitch"
                                             onChange={e => setReceivers_pitch(e.target.value)}
                                             value={receivers_pitch}
                                             required
@@ -229,14 +229,14 @@ export const CreateSimulation = () => {
                             <div className="form-group">
                                 <div className="row mb-2">
                                     <div className="col-5">
-                                        <label htmlFor="sens_edge_margin" className="col-form-label">Sensor Edge Margin:</label>
+                                        <label htmlFor="sens_edge_margin" className="col-form-label">Edge Margin:</label>
                                     </div>
                                     <div className="col-6">
                                         <input
                                             type="number"
                                             className="form-control"
                                             id="sens_edge_margin"
-                                            placeholder="Enter the sensor edge margin"
+                                            placeholder="Enter the edge margin"
                                             onChange={e => setSens_edge_margin(e.target.value)}
                                             value={sens_edge_margin}
                                             required
@@ -300,7 +300,7 @@ export const CreateSimulation = () => {
                                             type="number"
                                             className="form-control"
                                             id="porosidad"
-                                            placeholder="Enter your Porosity"
+                                            placeholder="Enter porosity percentage"
                                             onChange={e => setPorosity(e.target.value)}
                                             value={porosity}
                                             required
@@ -321,7 +321,7 @@ export const CreateSimulation = () => {
                                             type="number"
                                             className="form-control"
                                             id="attenuation"
-                                            placeholder="Enter the attenuation"
+                                            placeholder="Enter the attenuation value"
                                             onChange={e => setAttenuation(e.target.value)}
                                             value={attenuation}
                                             disabled
