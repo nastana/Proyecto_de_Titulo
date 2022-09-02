@@ -20,7 +20,7 @@ from dotenv import load_dotenv
 load_dotenv()
 sys.path.append("Reidmen Fenics/ipnyb propagation")
 print(sys.path)
-#fmain = __import__("TimeSimTransIsoMatCij2D_test")
+Reidmen = __import__("TimeSimTransIsoMatCij2D_test")
 
 
 
@@ -165,7 +165,7 @@ def load_data_id(id):
             'porosity': doc[12],
             'attenuation': doc[13],
             'p_status': status,
-            'time': doc[15],
+            'time': str(doc[15]),
             'start_datetime': doc[16],
         })
     return jsonify(data_t)
@@ -249,8 +249,9 @@ def load_result_id_put(id):
     cur.execute('UPDATE SIMULATION SET p_status = %s, start_datetime = %s WHERE ID_SIMULATION = %s', ('1', datetime.now(), sub_id))
     mysql.connection.commit()
    
-    #filename,time = TimeSimTransIsoMatCij2D_test.fmain(n_emitters, n_receivers, sens_distance, plate_thickness, porosity, sub_id)
-    #print("Nombre archivo",filename)
+    print(type(plate_thickness))
+    filename,time = Reidmen.fmain(n_emitters, n_receivers, sens_distance, plate_thickness, porosity, sub_id)
+    print("Nombre archivo",filename)
     
     # with open(filename,"rb") as d:
     #     datar = d.read()
@@ -258,11 +259,10 @@ def load_result_id_put(id):
     # print(type(time))
     
     #cur = mysql.connection.cursor()
-    #sql = "INSERT INTO RESULT_MAT (RESULT_STEP_01, ID_SIMULATION) VALUE (%s, %s);"
-    #cur.execute(sql,(filename, sub_id))
-    #cur.execute("UPDATE SIMULATION SET time = %s WHERE id = {0};".format(sub_id))
-    #cur.execute(sql, time)
-    #mysql.connection.commit()
+    sql = "INSERT INTO RESULT_MAT (RESULT_STEP_01, ID_SIMULATION) VALUE (%s, %s);"
+    cur.execute(sql,(filename, sub_id))
+    cur.execute('UPDATE SIMULATION SET TIME = %s, P_STATUS = %s WHERE ID_SIMULATION = %s;', (time, '2', sub_id))
+    mysql.connection.commit()
     cur.close();
     return('Ok')
     
