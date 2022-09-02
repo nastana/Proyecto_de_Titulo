@@ -430,7 +430,17 @@ export const Load = () => {
                                     {extended_data.p_status === "In Progress" ?
                                     <div className='row mb-3'>
                                         <ProgressBar now={75} />
-                                    </div> : null }
+                                    </div> : ( 
+                                    extended_data.p_status === "Done" ?
+                                    <div className='row mb-3'>
+                                        <div className='col-6'>
+                                            <label>Time:</label>
+                                        </div>
+                                        <div className='col-3'>
+                                            <label>{extended_data.time}
+                                            </label>
+                                        </div>
+                                    </div> : null )}
                                 </div>
                                 <Modal.Footer>
                                     {extended_data.p_status === "Not Started" ? <Button onClick={() => startSimultation(extended_data.id_simulation)}> Start Simulation </Button> : (
