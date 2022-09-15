@@ -16,14 +16,15 @@ import os
 from dotenv import load_dotenv
 
 load_dotenv()
-sys.path.insert(1, 'src/Reidmen Fenics/ipnyb propagation')
 
-from TimeSimTransIsoMatCij2D_test import fmain
-#from 'Reidmen Fenics'.'ipnyb propagation' import TimeSimTransIsoMatCij2D_test
-#from rute import fmain
-#import Reidmen Fenics/ipnyb propagation/TimeSimTransIsoMatCij2D_test.py
-#exec(open("Reidmen Fenics/ipnyb propagation/TimeSimTransIsoMatCij2D_test.py").read())
-# python -m src.main
+#Local reference
+sys.path.append("Reidmen Fenics/ipnyb propagation")
+
+#Docker reference
+#sys.path.append("src/Reidmen Fenics/ipnyb propagation")
+
+print(sys.path)
+Reidmen = __import__("TimeSimTransIsoMatCij2D_test")
 
 # creating the Flask application
 app = Flask(__name__)
@@ -37,7 +38,7 @@ app = Flask(__name__)
 
 app.config['MYSQL_HOST'] = os.getenv('MYSQL_HOST')
 app.config['MYSQL_USER'] = os.getenv('MYSQL_USER')
-app.config['MYSQL_PORT'] =  os.getenv('MYSQL_PORT')
+app.config['MYSQL_PORT'] =  int(os.getenv('MYSQL_PORT'))
 app.config['MYSQL_PASSWORD'] = os.getenv('MYSQL_PASSWORD')
 app.config['MYSQL_DB'] = os.getenv('MYSQL_DB') # proyecto-v01 para win y proyecto_v01 para linux
 app.config['CORS_HEADERS'] = os.getenv('CORS_HEADERS')
@@ -208,7 +209,7 @@ def load_result_id_put(id):
     mysql.connection.commit()
    
   
-    filename,time = fmain(n_transmitter,n_receiver,distance,plate_thickness,porosity,sub_id)
+    filename,time = Reidmen.fmain(n_transmitter,n_receiver,distance,plate_thickness,porosity,sub_id)
     print("Nombre archivo",filename)
     # with open(filename,"rb") as d:
     #     datar = d.read()
@@ -259,4 +260,4 @@ def result():
     return 'result'
 
 if __name__ == '__main__':
-    app.run(port=80, debug=False, host="0.0.0.0")
+    app.run(port=3000, debug=False, host="0.0.0.0")
