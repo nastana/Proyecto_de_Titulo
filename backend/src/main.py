@@ -241,8 +241,12 @@ def load_result_id_put(id):
     n_emitters = request.json['n_emitters']
     n_receivers = request.json['n_receivers']
     sens_distance = request.json['sens_distance']
-
+    emitter_pitch = request.json['emitter_pitch']
+    receiver_pitch = request.json['receiver_pitch']
+    sensor_edge_margin = request.json['sensor_edge_margin']
+    typical_mesh_size = request.json['typical_mesh_size']
     plate_thickness = request.json['plate_thickness']
+    plate_size = request.json['plate_size']
     porosity = request.json['porosity']
 
     cur = mysql.connection.cursor()
@@ -250,7 +254,7 @@ def load_result_id_put(id):
     mysql.connection.commit()
    
     print(type(plate_thickness))
-    filename,time = Reidmen.fmain(n_emitters, n_receivers, sens_distance, plate_thickness, porosity, sub_id)
+    filename,time = Reidmen.fmain(n_emitters, n_receivers, sens_distance, emitter_pitch, receiver_pitch, sensor_edge_margin, typical_mesh_size, plate_thickness, plate_size, porosity, sub_id)
     print("Nombre archivo",filename)
     
     # with open(filename,"rb") as d:

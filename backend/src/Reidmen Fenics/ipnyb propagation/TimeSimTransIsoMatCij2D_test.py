@@ -6,6 +6,7 @@
 # In[ ]:
 
 
+from dis import dis
 from dolfin import *
 from mshr import *
 import numpy as np
@@ -15,18 +16,22 @@ import pandas as pd
 
 
 #%matplotlib inline
-def fmain (n_transmitter,n_receiver,distance,plate_thickness,porosity,id):
+def fmain (n_transmitter, n_receiver, distance, emitter_pitch, receiver_pitch, sensor_edge_margin, typical_mesh_size, plate_thickness, plate_size, porosity, id):
     
     import numpy as np
     from datetime import datetime
     import time
     import pandas as pd 
     # Rectangle geometry limits
+
+
+    print('Parametros: ', n_transmitter, n_receiver, distance, emitter_pitch, receiver_pitch, sensor_edge_margin, typical_mesh_size, plate_thickness, plate_size, porosity, id)
+
     Hora_inicio = datetime.now()
     print(Hora_inicio)
     #tiempo_inicio_1 = time.time()
     tiempo_inicio = time.time()
-    zlim, ylim = 70., plate_thickness#0.5 #Cambiar 0.5, 1, 2, 3
+    zlim, ylim = 70., plate_thickness #0.5 #Cambiar 0.5, 1, 2, 3
     # Porosity level from Mathilde data
     # this data starts from 1% porosity values!
     #por = 11 # the porosity level is por+1

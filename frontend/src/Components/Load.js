@@ -105,7 +105,12 @@ export const Load = () => {
                     n_emitters: extended_data[0]['n_emitter'],
                     n_receivers: extended_data[0]['n_receiver'],
                     sens_distance: extended_data[0]['sensor_distance'],
+                    emitter_pitch: extended_data[0]['emitter_pitch'],
+                    receiver_pitch: extended_data[0]['receiver_pitch'],
+                    sensor_edge_margin: extended_data[0]['sensor_edge_margin'],
+                    typical_mesh_size: extended_data[0]['typical_mesh_size'],
                     plate_thickness: extended_data[0]['plate_thickness'],
+                    plate_size: extended_data[0]['plate_thickness'],
                     porosity: extended_data[0]['porosity']
                 })
             });
