@@ -229,7 +229,7 @@ def fmain (n_transmitter,n_receiver,distance,plate_thickness,porosity,id):
     import numpy as np
     #ojo con la ruta
     #tiempo_inicio_3 = time.time()
-    C_mathilde = sio.loadmat(r"Reidmen Fenics/ipnyb propagation/Files_mat/C_values_mathilde.mat")
+    C_mathilde = sio.loadmat(r"src/Reidmen Fenics/ipnyb propagation/Files_mat/C_values_mathilde.mat")
     # Define the constants
     # The stiffness constants in [GPa] --> [g/mm(\mu sec)^2]
     # are given by the mathilde .mat file of 5%
@@ -484,7 +484,7 @@ def fmain (n_transmitter,n_receiver,distance,plate_thickness,porosity,id):
             'zsens': zsens, 'ysens': ysens, 'ntimes': ntimes,
             'times': times,
             'sol_sensors_z': sol_sensors_z, 'sol_sensors_y': sol_sensors_y}
-    filename1 = 'Reidmen Fenics/ipnyb propagation/Files_mat/TimeSimP'+str(por+1)+'TransIsoW'+            str(ylim)+'M'+str(size) + id + '.mat'
+    filename1 = 'src/Reidmen Fenics/ipnyb propagation/Files_mat/TimeSimP'+str(por+1)+'TransIsoW'+            str(ylim)+'M'+str(size) + id + '.mat'
     filename = 'TimeSimP'+str(por+1)+'TransIsoW'+            str(ylim)+'M'+str(size) + id + '.mat'
     sio.savemat(filename1, savedic, appendmat=True)
 

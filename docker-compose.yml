@@ -1,54 +1,46 @@
-version: "3"
+version: "3.3"
 
 services:
-    basedatos:
-        container_name: mysqldb
+    mysql:
+        build: 
+            context: ./db
+        container_name: mysql
         restart: always
-        image: mysql:5.7
+        image: mysql
         volumes: 
-          - db_data:/var/lib/mysql
+          - dbdata:/var/lib/mysql
+          #- ./db:/docker-entrypoint-initdb.d/:ro
+          #- ./db:/docker-entrypoint-initdb.d/init.sql
         environment:
-          MYSQL_ROOT_PASSWORD: informatica1109997
-          MYSQL_DATABASE: BDAT-FE-simulations
-          MYSQL_USER: UserBDAT
-          MYSQL_PASSWORD: informatica1109997
+          MYSQL_ROOT_PASSWORD: 'BDATpassword'
+          MYSQL_DATABASE: 'BDAT_FE_simulations'
+          MYSQL_USER: 'UserBDAT'
+          MYSQL_PASSWORD: 'BDATpassword'
+        ports:
+            - '3306:3306'
 
     backend:
         depends_on:
-            - basedatos
+            - mysql
         build:
             context: ./backend
             dockerfile: Dockerfile
         container_name: backend
         restart: always
-        expose: 
-            - 80
-        networks:
-            - red-proxy
-            - red_privada
-        environment: 
-            VIRTUAL_HOST: localhost2
+        ports:
+            - '3000:3000'
 
     frontend:
         depends_on:
-          - basedatos
+          - mysql
           - backend
         build:
             context: ./frontend/
             dockerfile: Dockerfile
         container_name: frontend-react
         stdin_open: true
-        networks: 
-            - red-proxy
-        environment: 
-            VIRTUAL_HOST: localhost
-
-   
-networks: 
-    red-proxy:
-        external: 
-            name: nginx-proxy
-    red_privada:
+        ports:
+            - '3001:3001'
         
 volumes: 
-    db_data:
+    dbdata:

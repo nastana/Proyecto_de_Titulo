@@ -6,9 +6,9 @@ import Col from "react-bootstrap/Col";
 import Dropdown from 'react-bootstrap/Dropdown';
 import Row from "react-bootstrap/Row";
 import Pagination from './Pagination';
-import filemat from '../Components/download/matfile.mat'
 
 const API = process.env.REACT_APP_BACKEND;
+console.log(API);
 
 export const Load = () => {
 
@@ -20,16 +20,8 @@ export const Load = () => {
     const [currentPage, setCurentPage] = useState(1);
     const [postPerPage, setPostPerPage] = useState(10);
 
-    const [showd, setShowd] = useState(false);
-    const handleClosed = () => setShowd(false);
-    const handleShowd = () => setShowd(true);
-
-
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
-
-    const [dataDownload, setdataDownload] = useState([]);
 
 
 
@@ -134,13 +126,16 @@ export const Load = () => {
     }
 
     const downloadSimulation = async (id) => {
-        setShow(false)
         const resDownload = await fetch(`${API}/Load_data/download/${id}`)
-        const aer = await resDownload.json()
-        console.log("a",aer)
-        setdataDownload(aer)
-        //const download = await res.json()
-        handleShowd()
+    
+       // anchor link
+        const element = document.createElement("a");
+        element.href = resDownload.url
+        element.download = resDownload
+    
+        // simulate link click
+        document.body.appendChild(element); // Required for this to work in FireFox
+        element.click();
     }
 
 
@@ -156,7 +151,7 @@ export const Load = () => {
                     </p>
                     <hr />
                 </Alert>
-                <div class="d-flex flex-row-reverse">
+                <div className="d-flex flex-row-reverse">
                     <Row xs="auto" >
                         <Col>
                             <Dropdown>
@@ -226,10 +221,10 @@ export const Load = () => {
                     </table>
 
                 </div>
-                <div clasName="container">
+                <div className="container">
                     <div className="row">
                         <div className="col">
-                            <Button variant="secondary" clasName='justify-content-md-start' href="/">Back</Button>
+                            <Button variant="secondary" className='justify-content-md-start' href="/">Back</Button>
                         </div>
                         <div className="col">
                             <Pagination postsPerPage={postPerPage} totalPosts={sim.length} paginate={paginate} />
@@ -263,8 +258,8 @@ export const Load = () => {
                                         <div className="form-label">{extended_data.p_status}</div>
                                     </div>
                                 </div> */}
-                                <div class="col-sm-9">
-                                    <table class="table table-borderless">
+                                <div className="col-sm-9">
+                                    <table className="table table-borderless">
                                         <tbody>
                                             <tr>
                                                 <td>Number of emitters:</td>
@@ -321,23 +316,6 @@ export const Load = () => {
 
                         ))}
                     </Modal.Body>
-
-
-
-                </Modal>
-                <Modal show={showd} onHide={handleClosed}>
-                    <Modal.Header closeButton>
-                        <Modal.Title>Download</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>You will download the result of the selected simulation </Modal.Body>
-                    <Modal.Footer>
-                        <Button variant="secondary" onClick={handleClosed}>
-                            Close
-                        </Button>
-                        <Button variant="primary" href={filemat} download={dataDownload}>
-                            Download
-                        </Button>
-                    </Modal.Footer>
                 </Modal>
             </Container>
         </div>
