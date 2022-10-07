@@ -204,11 +204,8 @@ def load_data_download(v):
     data = cur.fetchone()
     filedata = data[0]
     filename = data[1]
-
-    # Decode the string
-    binary_data = base64.b64decode(filedata)
 	
-    return send_file(BytesIO(binary_data), as_attachment = True, download_name = filename, mimetype='mat')
+    return send_file(BytesIO(filedata), as_attachment = True, download_name = filename, mimetype='mat')
 
 
 @app.route('/load_data_PUT/<id>', methods=['PUT'])
