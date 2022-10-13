@@ -2,8 +2,6 @@
 #from sqlalchemy import schema
 #from .entities.entity import Session, engine, Base
 #from .entities.exam import Exam, ExamSchema
-from dis import dis
-import mimetypes
 from flask import Flask, jsonify, request, flash, send_file
 from flask.wrappers import Response
 from flask_mysqldb import MySQL
@@ -20,10 +18,12 @@ from dotenv import load_dotenv
 load_dotenv()
 
 #Local reference
-#sys.path.append("Reidmen Fenics/ipnyb propagation")
+#dockerRoute = ""
 
 #Docker reference
-sys.path.append("src/Reidmen Fenics/ipnyb propagation")
+dockerRoute = "src/"
+
+sys.path.append( dockerRoute + "Reidmen Fenics/ipnyb propagation")
 
 print(sys.path)
 Reidmen = __import__("TimeSimTransIsoMatCij2D_test")
@@ -90,22 +90,27 @@ def test():
 def input_data():
     #print(request.json['status'])
     #print(request)
-    n_transmitter = request.json['n_transmitter'],
-    n_receiver = request.json['n_receiver'],
-    distance = request.json['distance'],
-    plate_thickness = request.json['plate_thickness'],
+    n_transmitter = request.json['n_transmitter']
+    n_receiver = request.json['n_receiver']
+    distance = request.json['distance']
+    plate_thickness = request.json['plate_thickness']
     porosity = request.json['porosity']
-    status = request.json['status']
-    print("Distance", distance)
-    cur = mysql.connection.cursor()
-    cur.execute("INSERT INTO timesimtransisomat_first_step01 (n_transmitter, n_receiver, distance, plate_thickness, porosity, p_status) VALUES (%s,%s,%s,%s,%s,%s)",
-                (n_transmitter, n_receiver, distance, plate_thickness, porosity, status))
-    print(cur.lastrowid)
-    last_id = cur.lastrowid
-    mysql.connection.commit()
-    flash('data Added successfully')
-    return 'ok'
+    status = "Not started"
 
+    isValid, parameter = ValidData(n_transmitter, n_receiver, distance, plate_thickness, porosity)
+    if (isValid):
+        cur = mysql.connection.cursor()
+        cur.execute("INSERT INTO timesimtransisomat_first_step01 (n_transmitter, n_receiver, distance, plate_thickness, porosity, p_status) VALUES (%s,%s,%s,%s,%s,%s)",
+                    (n_transmitter, n_receiver, distance, plate_thickness, porosity, status))
+        print(cur.lastrowid)
+        last_id = cur.lastrowid
+        mysql.connection.commit()
+
+        flash('data Added successfully')
+        return 'ok'
+    else:
+        flash('Error in data type: ' + parameter)
+        return 'Error in data: ' + parameter
 
 @app.route('/Load_data', methods=['GET'])
 def load_data():
@@ -225,7 +230,7 @@ def load_result_id_put(id):
     filename,time = Reidmen.fmain(n_transmitter,n_receiver,distance,plate_thickness,porosity,sub_id)
     print("Nombre archivo",filename)
 
-    filepath = "src/Reidmen Fenics/ipnyb propagation/Files_mat/" + filename
+    filepath = dockerRoute + "Reidmen Fenics/ipnyb propagation/Files_mat/" + filename
     
     file = read_file(filepath)
 
@@ -283,6 +288,22 @@ def read_file(filename):
 @app.route('/Result')
 def result():
     return 'result'
+
+def ValidData(n_transmitter, n_receiver, distance, plate_thickness, porosity):
+
+
+    if(type(n_transmitter) is not int):
+        return False, "n_transmitter"
+    elif(type(n_receiver) is not int):
+        return False, "n_receiver"
+    elif(type(distance) is not int and type(distance) is not float):
+        return False, "distance"
+    elif(type(plate_thickness) is not int):
+        return False, "plate_thinckenss"
+    elif(type(porosity) is not int and type(porosity) is not float):
+        return False, "porosity"
+    else:
+        return True, ""
 
 if __name__ == '__main__':
     app.run(port=3000, debug=False, host='0.0.0.0')

@@ -37,8 +37,7 @@ export const Users = () => {
                 n_receiver: n_receptores,
                 distance: distance,
                 plate_thickness: espesor,
-                porosity: porosidad,
-                status: "Not started"
+                porosity: porosidad
             })
         })
         console.log(response.headers.get('Location'))
