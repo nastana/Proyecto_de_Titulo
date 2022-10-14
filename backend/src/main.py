@@ -88,8 +88,7 @@ def test():
 
 @app.route('/Input_data', methods=['POST'])
 def input_data():
-    #print(request.json['status'])
-    #print(request)
+
     n_transmitter = request.json['n_transmitter']
     n_receiver = request.json['n_receiver']
     distance = request.json['distance']
@@ -97,19 +96,22 @@ def input_data():
     porosity = request.json['porosity']
     status = "Not started"
 
-    isValid, parameter = ValidData(n_transmitter, n_receiver, distance, plate_thickness, porosity)
+    isValid, parameter, typeReceived = ValidData(n_transmitter, n_receiver, distance, plate_thickness, porosity)
+    
     if (isValid):
         cur = mysql.connection.cursor()
         cur.execute("INSERT INTO timesimtransisomat_first_step01 (n_transmitter, n_receiver, distance, plate_thickness, porosity, p_status) VALUES (%s,%s,%s,%s,%s,%s)",
                     (n_transmitter, n_receiver, distance, plate_thickness, porosity, status))
-        print(cur.lastrowid)
+
         last_id = cur.lastrowid
         mysql.connection.commit()
 
         flash('data Added successfully')
+        print('ok')
         return 'ok'
     else:
         flash('Error in data type: ' + parameter)
+        print('Error in data type: ' + parameter + '<' + typeReceived + '>')
         return 'Error in data: ' + parameter
 
 @app.route('/Load_data', methods=['GET'])
@@ -293,17 +295,17 @@ def ValidData(n_transmitter, n_receiver, distance, plate_thickness, porosity):
 
 
     if(type(n_transmitter) is not int):
-        return False, "n_transmitter"
+        return False, "n_transmitter", str(type(n_transmitter))
     elif(type(n_receiver) is not int):
-        return False, "n_receiver"
+        return False, "n_receiver", str(type(n_receiver))
     elif(type(distance) is not int and type(distance) is not float):
-        return False, "distance"
+        return False, "distance", str(type(distance))
     elif(type(plate_thickness) is not int):
-        return False, "plate_thinckenss"
+        return False, "plate_thinckenss", str(type(plate_thickness))
     elif(type(porosity) is not int and type(porosity) is not float):
-        return False, "porosity"
+        return False, "porosity", str(type(porosity))
     else:
-        return True, ""
+        return True, "", ""
 
 if __name__ == '__main__':
     app.run(port=3000, debug=False, host='0.0.0.0')

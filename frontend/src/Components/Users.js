@@ -33,11 +33,11 @@ export const Users = () => {
                 'Access-Control-Expose-Headers': Location,
                         },
             body: JSON.stringify({
-                n_transmitter: n_emisores,
-                n_receiver: n_receptores,
-                distance: distance,
-                plate_thickness: espesor,
-                porosity: porosidad
+                n_transmitter: parseInt(n_emisores),
+                n_receiver: parseInt(n_receptores),
+                distance: parseFloat(distance),
+                plate_thickness: parseInt(espesor),
+                porosity: parseFloat(porosidad)
             })
         })
         console.log(response.headers.get('Location'))
