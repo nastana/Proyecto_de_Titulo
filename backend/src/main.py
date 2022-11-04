@@ -1,7 +1,3 @@
-#from flask.globals import session
-#from sqlalchemy import schema
-#from .entities.entity import Session, engine, Base
-#from .entities.exam import Exam, ExamSchema
 from flask import Flask, jsonify, request, flash, send_file
 from flask.wrappers import Response
 from flask_mysqldb import MySQL
@@ -12,7 +8,6 @@ import shutil
 import sys
 import os
 from io import BytesIO
-#sys.path.insert(1, 'Reidmen Fenics/ipnyb propagation')
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -133,6 +128,15 @@ def load_data():
         })
     return jsonify(data_t)
 
+@app.route('/delete_sim/<id>', methods=['DELETE'])
+def delete_sim(id):
+    sub_id = id
+    cur = mysql.connection.cursor()
+    cur.execute(
+        "DELETE FROM timesimtransisomat_first_step01 WHERE id = {0}".format(sub_id))
+    mysql.connection.commit()
+    cur.close()
+    return jsonify("DELETE", id)
 
 @app.route('/Load_data/<id>', methods=['GET'])
 def load_data_id(id):
@@ -165,7 +169,6 @@ def load_data_porosity(v):
     cur.execute(
         "SELECT * FROM timesimtransisomat_first_step01 WHERE porosity = {0}".format(poro))
     data = cur.fetchall()
-    print(data)
     cur.close()
     for doc in data:
         data_t.append({
@@ -187,7 +190,7 @@ def load_data_distance(v):
     distance = v
     cur = mysql.connection.cursor()
     cur.execute(
-        "SELECT * FROM timesimtransisomat_first_step01 WHERE distance = {0}".format(distance))
+        "SELECT * FROM timesimtransisomat_first_step01 WHERE distance like '%{0}%'".format(distance))
     data = cur.fetchall()
     cur.close()
     for doc in data:

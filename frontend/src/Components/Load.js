@@ -125,6 +125,24 @@ export const Load = () => {
 
     }
 
+    const deleteSimultation = async (id) => {
+        setShow(false);
+        if (window.confirm("Are you sure you \nwant to delete this simulation?")) {
+            if (typeof extended_data === "object") {
+                await fetch(`${API}/delete_sim/${id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Accept': 'application/json',
+                        'content-Type': 'application/json'
+                    }
+                })
+                .then(console.log("Deleted"))
+                .catch(err => console.log(err));
+            }
+            window.location.reload(false);
+        }
+    }
+
     const downloadSimulation = async (id) => {
         const resDownload = await fetch(`${API}/Load_data/download/${id}`)
     
@@ -192,6 +210,7 @@ export const Load = () => {
                                 <th>Plate thickness</th>
                                 <th>Porosity</th>
                                 <th>Results</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -204,15 +223,14 @@ export const Load = () => {
                                     <td>{currentPosts.plate_thickness}</td>
                                     <td>{currentPosts.porosity}</td>
                                     <td>
-                                        {/* <Button className="btn btn-primary my-2" onClick={handleShow} >View Info</Button> */}
-                                        <Button onClick={() => viewInfo(currentPosts.id)}>
+                                        <Button size="sm" onClick={() => viewInfo(currentPosts.id)}>
                                             View Info
                                         </Button>
-                                        {/* <a href="TimeSimP6TransIsoW1.0M350" download>
-                                            <button type="button" className="btn btn-primary my-2" >
-                                                Download results
-                                            </button>
-                                        </a> */}
+                                    </td>
+                                    <td>
+                                        <Button size="sm" variant="danger" onClick={() => deleteSimultation(currentPosts.id)}> 
+                                            Delete 
+                                        </Button>
                                     </td>
 
                                 </tr>
