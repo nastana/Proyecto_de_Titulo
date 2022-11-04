@@ -3,24 +3,20 @@
 
 # ## Case of 8 sources and 50 receptors, with left boundary of Dirichlet type.
 
-# In[ ]:
-
-
 from dolfin import *
 from mshr import *
-import numpy as np
-from datetime import datetime
-import time
-import pandas as pd
 
 
 #%matplotlib inline
 def fmain (n_transmitter,n_receiver,distance,plate_thickness,porosity,id):
     
+    import scipy.io as sio
     import numpy as np
     from datetime import datetime
     import time
-    import pandas as pd 
+    import pandas as pd
+    from ufl import Identity, indices, as_tensor
+
     # Rectangle geometry limits
     Hora_inicio = datetime.now()
     print(Hora_inicio)
@@ -130,8 +126,7 @@ def fmain (n_transmitter,n_receiver,distance,plate_thickness,porosity,id):
     from IPython.display import HTML
     HTML(X3DOM().html(mesh))
     """
-    print("Number of Cells; {0}, of Vertice: {1}".format(mesh.num_cells(),
-                                                    mesh.num_vertices()))
+    print("Number of Cells; {0}, of Vertice: {1}".format(mesh.num_cells(), mesh.num_vertices()))
 
     # Define update procedure
     def update(u, u_n, v_n, a_n, beta, gamma, dt):
@@ -143,7 +138,7 @@ def fmain (n_transmitter,n_receiver,distance,plate_thickness,porosity,id):
         u_vec, u_nvec = u.vector(), u_n.vector()
         v_nvec, a_nvec = v_n.vector(), a_n.vector()
         # update using the beta-gamma scheme
-        a_vec = (1.0/(beta*pow(dt,2)))*(u_vec-u_nvec-dt*v_nvec) -             ((1-2*beta)/(2*beta))*a_nvec
+        a_vec = (1.0/(beta*pow(dt,2)))*(u_vec-u_nvec-dt*v_nvec) - ((1-2*beta)/(2*beta))*a_nvec
         # update velocity
         v_vec = v_nvec + dt*((1-gamma)*a_nvec+gamma*a_vec)
         # update fields
@@ -153,11 +148,6 @@ def fmain (n_transmitter,n_receiver,distance,plate_thickness,porosity,id):
     #tiempo_final_1 = time.time()
     #tiempo_ejecucion_1 = tiempo_final_1 - tiempo_inicio_1
     #print ("Tiempo ejecución 1:", tiempo_ejecucion_1)
-
-
-    # In[2]:
-
-
     # Position of sensor to obtain the dforce!
     #tiempo_inicio_2 = time.time()
     nsens = n_receiver#1# Number of sensors separated at 0.4081 mm # RECEPTORES
@@ -219,14 +209,8 @@ def fmain (n_transmitter,n_receiver,distance,plate_thickness,porosity,id):
     # tiempo_final_2 = time.time()
     # tiempo_ejecucion_2 = tiempo_final_2 -tiempo_inicio_2
     # print ("Tiempo ejecución 2:", tiempo_ejecucion_2)
-
-
-    # In[3]:
-
-
     # Obtain the experimental data from .mat file
-    import scipy.io as sio
-    import numpy as np
+    
     #ojo con la ruta
     #tiempo_inicio_3 = time.time()
     C_mathilde = sio.loadmat(r"src/Reidmen Fenics/ipnyb propagation/Files_mat/C_values_mathilde.mat")
@@ -244,9 +228,6 @@ def fmain (n_transmitter,n_receiver,distance,plate_thickness,porosity,id):
     # tiempo_final_3 = time.time()
     # tiempo_ejecucion_3  = tiempo_final_3 - tiempo_inicio_3
     # print("Tiempo ejecución 3:", tiempo_ejecucion_3)
-
-    # In[4]:
-
     #tiempo_inicio_4 = time.time()
     por = porosity#5 # 6% of porosity # POROSIDAD
     print(""" At {0}% of porosity, density of {1:2.4f},
@@ -259,8 +240,6 @@ def fmain (n_transmitter,n_receiver,distance,plate_thickness,porosity,id):
     # tiempo_ejecucion_4 = tiempo_final_4 -tiempo_inicio_4
     # print ("Tiempo ejecución 4:", tiempo_ejecucion_4)
 
-    # In[5]:
-
     #tiempo_inicio_5 = time.time()
     # Comparison of values
     print("""
@@ -272,20 +251,16 @@ def fmain (n_transmitter,n_receiver,distance,plate_thickness,porosity,id):
     # tiempo_ejecucion_5 = tiempo_final_5 -tiempo_inicio_5
     # print("Tiempo ejecución 5:", tiempo_ejecucion_5)
 
-    # In[6]:
-
-
     # Define kronecker delta in 2D and indices
     # Cambios realizados 15/06/2021 debido a la reunión con Rediman.
     #tiempo_inicio_6 = time.time()
-    from ufl import Identity, indices, as_tensor
+    
     delta = Identity(2)
     i,j,k,l = indices(4)
 
     # Define strain tensor
     def epsilon(u):
-        return as_tensor(0.5*(u[i].dx(j)+u[j].dx(i)),
-                        (i,j))
+        return as_tensor(0.5*(u[i].dx(j)+u[j].dx(i)),(i,j))
 
     # Define stiffness tensor C_{i,j,k,l} transverse isotropic
     def VoigtToTensor(A):
@@ -298,30 +273,23 @@ def fmain (n_transmitter,n_receiver,distance,plate_thickness,porosity,id):
         A31, A51 = A13, A15
         A53 = A35
 
-        return as_tensor([           [            [ [A11, A15], [A15, A13]] ,            [ [A51, A55], [A55, A53]]            ],            [
-                [ [A51, A55], [A55, A53]] ,\
-                [ [A31, A35], [A35, A33]] \
-            ] \
-                        ])
+        return as_tensor([[[ [A11, A15], [A15, A13]], [ [A51, A55], [A55, A53]]],[[ [A51, A55], [A55, A53]] ,[ [A31, A35], [A35, A33]]]])
 
     # We take the standard density
     rho = d[por] # [g/cm^3] --> [g/(mm)^3]
     # Define the Voigt matrix representing the tensor
     # Here, the 3-axis is the z-axis, and
     # 1-axis in the y-axis or x-axis by the simmetry
-    C_voigt = np.array([                   [C33[por], C13[por], 0],                    [C13[por], C11[por], 0],                    [0, 0, C55[por]]
-                    ])
+    C_voigt = np.array([[C33[por], C13[por], 0], [C13[por], C11[por], 0], [0, 0, C55[por]]])
     # Obtain the stiffness tensor
     C = VoigtToTensor(C_voigt)
     # Define stress tensor
     def sigma(u):
-        return as_tensor(C[i,j,k,l]*epsilon(u)[k,l],
-                        (i,j))
+        return as_tensor(C[i,j,k,l]*epsilon(u)[k,l], (i,j))
 
     # tiempo_final_6 = time.time()
     # tiempo_ejecucion_6 = tiempo_final_6 - tiempo_inicio_6
     # print("Tiempo ejecución 6:", tiempo_ejecucion_6)
-    # In[7]:
 
     #tiempo_inicio_7 = time.time()
     # Define the three main blocks in variational forms
@@ -339,7 +307,7 @@ def fmain (n_transmitter,n_receiver,distance,plate_thickness,porosity,id):
         factor_2 = rho/(beta*dt)
         factor_3 = rho*(1.0-2.0*beta)/(2.0*beta)
         # rhs without force defined from time-derivative rest
-        value_wtf = factor_1*inner(u_n, w)*dx +                 factor_2*inner(v_n, w)*dx +                 factor_3*inner(a_n, w)*dx
+        value_wtf = factor_1*inner(u_n, w)*dx + factor_2*inner(v_n, w)*dx + factor_3*inner(a_n, w)*dx
         # return the sum of value_wtf
         return value_wtf
 
@@ -378,8 +346,6 @@ def fmain (n_transmitter,n_receiver,distance,plate_thickness,porosity,id):
     # tiempo_ejecucion_7 = tiempo_inicio_7 - tiempo_final_7
     # print("Tiempo ejecución 7:", tiempo_ejecucion_7)
 
-    # In[8]:
-
     #tiempo_inicio_8 = time.time()
     # Check if the points a the left have been taken.
     print("Points at boundary left: ")
@@ -388,15 +354,13 @@ def fmain (n_transmitter,n_receiver,distance,plate_thickness,porosity,id):
     # tiempo_final_8 = time.time()
     # tiempo_ejecucion_8 = tiempo_final_8 -tiempo_inicio_8
     # print("Tiempo ejecución 8:", tiempo_ejecucion_8)
-    # In[9]:
-
 
     #Cambios debido a RecursionError: maximum recursion depth exceeded
     #tiempo_inicio_9 =time.time()
     # list all boundaries
     bcs = [bc_domain]
     # Define name solutions for saving with File
-    filename = "SimP"+str(por+1)+"TransIso"+str(ylim)+            "M"+str(size)+".pvd"
+    filename = "SimP"+str(por+1)+"TransIso"+str(ylim)+ "M"+str(size)+".pvd"
     filepvd ="Results/"+filename
     vtk_u = File(filepvd)
     # Define file to save data at experiment with sous 2
@@ -410,6 +374,7 @@ def fmain (n_transmitter,n_receiver,distance,plate_thickness,porosity,id):
     # output the dt time
     dt = times[1]-times[0]
     print("Considering dt: ", dt)
+    print("Executing iteration please wait...")
     # Iteration over each source secuentially
     for sous_j in range(nsous):
         # Obtain boundary layer and assemble it!
@@ -423,7 +388,7 @@ def fmain (n_transmitter,n_receiver,distance,plate_thickness,porosity,id):
         # Iterate the experiment over time
         for time_i in range(ntimes):
             ## Define Neumann boundary condition for source
-            time, t_0 = float(times[time_i]), 0.0#5.0#t_0 ~ 5 [\mu sec]
+            time, t_0 = float(times[time_i]), 5.0 #5.0#t_0 ~ 5 [\mu sec]
             # Define general variance
             sig_time = 0.7 # sig_time ~ 1 [\mu sec]
             source_exp = Source(time=time, t_0=t_0,
@@ -472,20 +437,16 @@ def fmain (n_transmitter,n_receiver,distance,plate_thickness,porosity,id):
     #tiempo_final_9 = time()
     #tiempo_ejecucion_9 = tiempo_final_9 - tiempo_inicio_9
     #print("Tiempo ejecución 9:", tiempo_ejecucion_9)
-    # In[10]:
 
     #tiempo_inicio_10 = time()
-    import scipy.io as sio
-    import pandas as pd
-
     # create dictionary with variables to save
     savedic = {'zlim': zlim, 'ylim': ylim, 'nsous': nsous,
             'zsous': zsous, 'ysous': ysous, 'nsens': nsens,
             'zsens': zsens, 'ysens': ysens, 'ntimes': ntimes,
             'times': times,
             'sol_sensors_z': sol_sensors_z, 'sol_sensors_y': sol_sensors_y}
-    filename1 = 'src/Reidmen Fenics/ipnyb propagation/Files_mat/TimeSimP'+str(por+1)+'TransIsoW'+            str(ylim)+'M'+str(size) + id + '.mat'
-    filename = 'TimeSimP'+str(por+1)+'TransIsoW'+            str(ylim)+'M'+str(size) + id + '.mat'
+    filename1 = 'src/Reidmen Fenics/ipnyb propagation/Files_mat/TimeSimP'+str(por+1)+'TransIsoW'+ str(ylim)+'M'+str(size) + id + '.mat'
+    filename = 'TimeSimP'+str(por+1)+'TransIsoW'+ str(ylim)+'M'+str(size) + id + '.mat'
     sio.savemat(filename1, savedic, appendmat=True)
 
     ## Zona de Pruebas de tiempo ##
@@ -517,9 +478,6 @@ def fmain (n_transmitter,n_receiver,distance,plate_thickness,porosity,id):
 
     # # ## Data Processing and diagram plotting
 
-    # # In[11]:
-
-
     # # Cell created just for testing and recovering purposes
     # import scipy.io as sio
     # from scipy.signal import hilbert
@@ -546,16 +504,8 @@ def fmain (n_transmitter,n_receiver,distance,plate_thickness,porosity,id):
     # data.keys()
 
     #Aquí comienza la creación de los graficos
-    # In[ ]:
-
-
 #     # Variables: (Number of receptors, N. times, N. of emitters)
 #     sol_sensors_y.shape
-
-
-#     # In[ ]:
-
-
 #     def NormSVB(f_id, k, iFU, M):
 
 #         norm_fk = float(0) # to save to norm value
@@ -570,9 +520,6 @@ def fmain (n_transmitter,n_receiver,distance,plate_thickness,porosity,id):
 #         # The input signal has dim: (nsous,nfreq)
 
 #         return 20*np.log10(signal[sous_id, :])
-
-
-#     # In[ ]:
 
 
 #     ## Take just sensors separated at 0.4081 [mm]
@@ -632,10 +579,6 @@ def fmain (n_transmitter,n_receiver,distance,plate_thickness,porosity,id):
 #             print(" Value of NormSVB at this stage: {0:2.3f}".format(
 #                 matrix_fk_z[f_id, wv_id, M_id]))
 
-
-#     # In[ ]:
-
-
 #     # AQUI  VA COMENTADO
 #     # Some DEBUGGING!
 #     #%matplotlib inline
@@ -648,10 +591,6 @@ def fmain (n_transmitter,n_receiver,distance,plate_thickness,porosity,id):
 #     #freqs = np.fft.fftfreq(n = 2*ntimes)
 #     #plt.plot(fft_num.real.real)
 #     #plt.xlim([0, 0.2])
-
-
-#     # In[ ]:
-
 
 #     fig, axes = plt.subplots(nrows=1, ncols=1, figsize=(10,6))
 #     fig.subplots_adjust(left = 0.2, wspace = 0.4, hspace = 0.4)
@@ -670,10 +609,6 @@ def fmain (n_transmitter,n_receiver,distance,plate_thickness,porosity,id):
 #         plt.savefig(filename, dpi=150, bbox_inches='tight')
 #     plt.show()
 
-
-#     # In[ ]:
-
-
 #     # We load mat file of k values at different porosities
 #     # data['por2'] array of size(n_freqs, n_modes, n_thickness)
 #     Data_REF2D = sio.loadmat('Files_mat/k_REF2D_Datapy.mat')
@@ -682,16 +617,8 @@ def fmain (n_transmitter,n_receiver,distance,plate_thickness,porosity,id):
 #     DataPor = Data_REF2D['k_ref2D_Data']
 #     Data_REF2D.keys()
 
-
-#     # In[ ]:
-
-
 #     DataFreqs = np.reshape(Data_REF2D['f'], (205,))
 #     lim = np.max(DataFreqs)
-
-
-#     # In[ ]:
-
 
 #     # Obtain index for data arrays
 #     index_th = lambda x: int(round(x*10-8,2)//0.5)+int(round(ylim*10-8,2)%0.5)
@@ -720,10 +647,6 @@ def fmain (n_transmitter,n_receiver,distance,plate_thickness,porosity,id):
 #         plt.savefig(filename, dpi=150, bbox_inches='tight')
 #     plt.show()
 
-
-#     # In[ ]:
-
-
 #     # Obtain index for data arrays
 #     index_th = lambda x: int(round(x*10-8,2)//0.5)+int(round(ylim*10-8,2)%0.5)
 #     th = index_th(ylim)
@@ -749,10 +672,3 @@ def fmain (n_transmitter,n_receiver,distance,plate_thickness,porosity,id):
 #     filename = 'Plots/2DTimeS8P'+str(por+1)+'ElasticFK'+            str(ylim)+'M'+str(size)+'_z.png'
 #     plt.savefig(filename, dpi=150, bbox_inches='tight')
 #     plt.show()
-
-
-# # In[ ]:
-
-
-
-
