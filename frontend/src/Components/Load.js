@@ -23,6 +23,9 @@ export const Load = () => {
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
 
+    const [showModalInprogress, setShowModalInProgress] = useState(false);
+    const handleCloseModalInProgress = () => setShowModalInProgress(false);
+    const handleShowModalInProgress = () => setShowModalInProgress(true);
 
 
     const getSim = async (v) => {
@@ -87,41 +90,34 @@ export const Load = () => {
     }
 
     const startSimultation = async (id) => {
-        setShow(false);
-        //const res = await fetch(`${API}/Load_data/${id}`)
-        //const datasim = await res.json()
 
-        //console.log(n_emisores)
-        if (typeof extended_data === "object") {
+        const res = await fetch(`${API}/Active_Simulations`)
+        const datainfo = await res.json()
 
-            await fetch(`${API}/load_data_PUT/${id}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/Json'
-                },
-                body: JSON.stringify({
-                    n_transmitter: extended_data[0]['n_transmitter'],
-                    n_receiver: extended_data[0]['n_receiver'],
-                    distance: extended_data[0]['distance'],
-                    plate_thickness: extended_data[0]['plate_thickness'],
-                    porosity: extended_data[0]['porosity']
-                })
-            });
+        if (datainfo.count === 0) {
+            setShow(false);
+
+            if (typeof extended_data === "object") {
+
+                await fetch(`${API}/load_data_PUT/${id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/Json'
+                    },
+                    body: JSON.stringify({
+                        n_transmitter: extended_data[0]['n_transmitter'],
+                        n_receiver: extended_data[0]['n_receiver'],
+                        distance: extended_data[0]['distance'],
+                        plate_thickness: extended_data[0]['plate_thickness'],
+                        porosity: extended_data[0]['porosity']
+                    })
+                });
+            }
+            
+        } else {
+            handleClose()
+            handleShowModalInProgress()
         }
-
-
-        // var dataArray = new Array();
-        // for (var o in extended_data) {
-        //     dataArray.Push(extended_data[o]);
-        // }
-        // console.log(extended_data)
-        // console.log(extended_data['n_transmitter'])
-        //console.log(JSON.parse(extended_data[]))
-
-
-
-
-        //console.log("okis")
 
     }
 
@@ -334,6 +330,19 @@ export const Load = () => {
 
                         ))}
                     </Modal.Body>
+                </Modal>
+
+                <Modal show={showModalInprogress} onHide={handleCloseModalInProgress}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Simulation In Progress</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>There is a simulation in progress, please wait and try again later.</Modal.Body>
+                    <Modal.Footer>
+                        {/* <Button onClick={() => startSimultation(extended_data.id)}> Start Simulation </Button> */}
+                        <Button variant="secondary" onClick={handleCloseModalInProgress}>
+                            Close
+                        </Button>
+                    </Modal.Footer>
                 </Modal>
             </Container>
         </div>

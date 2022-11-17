@@ -282,7 +282,17 @@ def load_data_id_test(id):
     
     return 'Funciona'
 
-
+@app.route('/Active_Simulations', methods=['GET'])
+def ActiveSims():
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT count(*) FROM timesimtransisomat_first_step01 where p_status like '%In Progress%'")
+    data = cur.fetchone()
+    cur.close()
+    data_t = {
+        "count" : data[0]
+    }
+    print("Sim in progress:", data[0])
+    return jsonify(data_t)
 
 def read_file(filename):
     with open(filename, 'rb') as f:
