@@ -62,19 +62,19 @@ def test():
 @app.route('/Input_data', methods=['POST'])
 def input_data():
 
-    n_transmitter = request.json['n_transmitter']
-    n_receiver = request.json['n_receiver']
-    distance = request.json['distance']
+    n_emitters = request.json['n_emitters']
+    n_receivers = request.json['n_receivers']
+    mesh_size = request.json['mesh_size']
     plate_thickness = request.json['plate_thickness']
     porosity = request.json['porosity']
     status = "Not started"
 
-    isValid, parameter, typeReceived = ValidData(n_transmitter, n_receiver, distance, plate_thickness, porosity)
+    isValid, parameter, typeReceived = ValidData(n_emitters, n_receivers, mesh_size, plate_thickness, porosity)
     
     if (isValid):
         cur = mysql.connection.cursor()
         cur.execute("INSERT INTO timesimtransisomat_first_step01 (n_transmitter, n_receiver, distance, plate_thickness, porosity, p_status) VALUES (%s,%s,%s,%s,%s,%s)",
-                    (n_transmitter, n_receiver, distance, plate_thickness, porosity, status))
+                    (n_emitters, n_receivers, mesh_size, plate_thickness, porosity, status))
 
         last_id = cur.lastrowid
         mysql.connection.commit()
