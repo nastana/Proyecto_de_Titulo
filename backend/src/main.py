@@ -91,7 +91,7 @@ def input_data():
 def load_data():
     data_t = []
     cur = mysql.connection.cursor()
-    cur.execute('SELECT * FROM timesimtransisomat_first_step01')
+    cur.execute('SELECT * FROM timesimtransisomat_first_step01 ORDER BY id DESC')
     data = cur.fetchall()
     cur.close()
     for doc in data:
