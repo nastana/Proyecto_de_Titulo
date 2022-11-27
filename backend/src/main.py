@@ -28,32 +28,16 @@ app = Flask(__name__)
 
 # New begin
 
-# app.use()
-
-
-
-
 app.config['MYSQL_HOST'] = os.getenv('MYSQL_HOST')
 app.config['MYSQL_USER'] = os.getenv('MYSQL_USER')
 app.config['MYSQL_PORT'] =  int(os.getenv('MYSQL_PORT'))
 app.config['MYSQL_PASSWORD'] = os.getenv('MYSQL_PASSWORD')
-app.config['MYSQL_DB'] = os.getenv('MYSQL_DB') # proyecto-v01 para win y proyecto_v01 para linux
+app.config['MYSQL_DB'] = os.getenv('MYSQL_DB')
 app.config['CORS_HEADERS'] = os.getenv('CORS_HEADERS')
-
-
-# app.config['MYSQL_HOST'] = 'localhost'
-# app.config['MYSQL_USER'] = 'root'
-# #app.config['MYSQL_PORT'] =  os.getenv('MYSQL_PORT')
-# #app.config['MYSQL_PASSWORD'] = os.getenv('MYSQL_PASSWORD')
-# app.config['MYSQL_DB'] = 'proyecto_v01' # proyecto-v01 para win y proyecto_v01 para linux
-# app.config['CORS_HEADERS'] = 'Content-Type'
 
 mysql = MySQL(app)
 
 CORS(app)
-#, resouces={r"/*": {"origins": "*"}}, supports_credentials = True
-#cors = CORS(app, resources={r"/*": {"origins": "*"}})
-
 
 # settings
 app.secret_key = "110997"
@@ -61,8 +45,7 @@ app.secret_key = "110997"
 
 @app.route('/')
 def Index():
-    return '<h1>Hello world<h1>'
-
+    return '<h1>API is Working c:<h1>'
 
 @app.route('/Test')
 def test():
@@ -74,12 +57,7 @@ def test():
     print('valor de data:', data)
     for item in data:
         print(item)
-
-
     return jsonify(results=data)
-    #return json.dumps({'favorite_colors': favorite_colors()})
-
-
 
 @app.route('/Input_data', methods=['POST'])
 def input_data():
@@ -162,7 +140,6 @@ def load_data_id(id):
 
 @app.route('/Load_data/porosity/<v>', methods=['GET'])
 def load_data_porosity(v):
-    #print(request)
     data_t = []
     poro = v
     cur = mysql.connection.cursor()
@@ -181,7 +158,6 @@ def load_data_porosity(v):
             'p_status' : doc[7]
         })
     return jsonify(data_t)
-    #print (data)
 
 @app.route('/Load_data/distance/<v>', methods=['GET'])
 def load_data_distance(v):
@@ -204,11 +180,9 @@ def load_data_distance(v):
             'p_status' : doc[7]
         })
     return jsonify(data_t)
-    #print (data)
 
 @app.route('/Load_data/download/<v>', methods=['GET'])
 def load_data_download(v):
-    #print(request)
     cur = mysql.connection.cursor()
     cur.execute("select image, result_step_01 from timesimtransisomat_first_step01 WHERE id = {0}".format(v))
     data = cur.fetchone()
@@ -275,12 +249,6 @@ def load_data_id_test(id):
             'time' : str(doc[8])
         })
     return jsonify(data_t)
-    
-    
-    #cur.execute("UPDATE timesimtransisomat_first_step01 SET porosity = {0}, n_transmitter = {1}, n_receiver = {2}, distance = {3}, plate_thickness = {4}  WHERE id = {5};".format(
-    #     plus, n_transmitter, n_receiver, distance, plate_thickness, sub_id))
-    
-    return 'Funciona'
 
 @app.route('/Active_Simulations', methods=['GET'])
 def ActiveSims():
@@ -321,4 +289,4 @@ def ValidData(n_transmitter, n_receiver, distance, plate_thickness, porosity):
         return True, "", ""
 
 if __name__ == '__main__':
-    app.run(port=3000, debug=False, host='0.0.0.0')
+    app.run(port=os.getenv('PORT'), debug=False, host='0.0.0.0')
