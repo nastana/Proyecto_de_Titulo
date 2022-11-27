@@ -155,7 +155,6 @@ export const Load = () => {
 
     return (
         <div>
-
             <Container fluid>
                 <Alert variant="success">
                     <Alert.Heading>Hey, nice to see you</Alert.Heading>
@@ -195,7 +194,6 @@ export const Load = () => {
                 </div>
 
                 <div className="col md-6">
-                    {/*<script src="https://unpkg.com/bootstrap-table@1.18.3/dist/bootstrap-table-locale-all.min.js"></script>*/}
                     <table className="table table-striped" data-pagination="true" data-show-pagination-switch="true" responsive>
                         <thead>
                             <tr>
@@ -205,6 +203,7 @@ export const Load = () => {
                                 <th>Typical Mesh Size</th>
                                 <th>Plate thickness</th>
                                 <th>Porosity</th>
+                                <th>Status</th>
                                 <th>Results</th>
                                 <th>Action</th>
                             </tr>
@@ -218,6 +217,7 @@ export const Load = () => {
                                     <td>{currentPosts.distance}</td>
                                     <td>{currentPosts.plate_thickness}</td>
                                     <td>{currentPosts.porosity}</td>
+                                    <td>{currentPosts.p_status}</td>
                                     <td>
                                         <Button size="sm" onClick={() => viewInfo(currentPosts.id)}>
                                             View Info
@@ -233,71 +233,61 @@ export const Load = () => {
                             ))}
                         </tbody>
                     </table>
-
                 </div>
-                <div className="container">
-                    <div className="row">
-                        <div className="col">
-                            <Button variant="secondary" className='justify-content-md-start' href="/">Back</Button>
-                        </div>
-                        <div className="col">
-                            <Pagination postsPerPage={postPerPage} totalPosts={sim.length} paginate={paginate} />
-                        </div>
-                    </div>
 
+                <div className="row">
+                    <div className="col">
+                        <Button variant="secondary" className='justify-content-md-start' href="/">Back</Button>
+                    </div>
+                    <div className="col">
+                        <Pagination postsPerPage={postPerPage} totalPosts={sim.length} paginate={paginate} />
+                    </div>
                 </div>
                 <Modal show={show} onHide={handleClose}>
                     <Modal.Header closeButton>
-                        <Modal.Title>Status</Modal.Title>
+                        <Modal.Title>Details</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
                         {extended_data.map(extended_data => (
-
                             <a key={extended_data.id}>
-                                {/* <div class="row">
-                                    <div class="col-sm-5">
-                                        <div className="form-label">Number of emitters: {extended_data.n_transmitter}</div>
-                                        <div className="form-label">Number of receivers: {extended_data.n_receiver}</div>
-                                        <div className="form-label">Distance betwen last emitter and first receiver: {extended_data.distance}</div>
-                                        <div className="form-label">Plate Thickness: {extended_data.plate_thickness}</div>
-                                        <div className="form-label">Porosity: {extended_data.porosity}</div>
-                                        <div className="form-label">Status: {extended_data.p_status}</div>
-                                    </div>
-                                    <div class="col-sm-5">
-                                        <div className="form-label">{extended_data.n_transmitter}</div>
-                                        <div className="form-label">{extended_data.n_receiver}</div>
-                                        <div className="form-label">{extended_data.distance}</div>
-                                        <div className="form-label">{extended_data.plate_thickness}</div>
-                                        <div className="form-label">{extended_data.porosity}</div>
-                                        <div className="form-label">{extended_data.p_status}</div>
-                                    </div>
-                                </div> */}
                                 <div className="col-sm-9">
                                     <table className="table table-borderless">
                                         <tbody>
                                             <tr>
-                                                <td>Number of emitters:</td>
+                                                <td>N° Emitters:</td>
                                                 <td>{extended_data.n_transmitter}</td>
+                                                <td></td>
                                             </tr>
                                             <tr>
-                                                <td>Number of receivers:</td>
+                                                <td>N° Receivers:</td>
                                                 <td>{extended_data.n_receiver}</td>
+                                                <td></td>
                                             </tr>
                                             <tr>
-                                                <td>Typical Mesh Size (mm):</td>
+                                                <td>Typical Mesh Size:</td>
                                                 <td>{extended_data.distance}</td>
+                                                <td>
+                                                    <label>[mm]</label>
+                                                </td>
                                             </tr>
                                             <tr>
                                                 <td>Plate Thickness:</td>
                                                 <td>{extended_data.plate_thickness}</td>
+                                                <td>
+                                                    <label>[mm]</label>
+                                                </td>
                                             </tr>
                                             <tr>
                                                 <td>Porosity:</td>
                                                 <td>{extended_data.porosity}</td>
+                                                <td>
+                                                    <label>[%]</label>
+                                                </td>
                                             </tr>
                                             <tr>
-                                                <td>Time Ejecution [HH:MM:SS] </td>
+                                                <td>Time Ejecution</td>
                                                 <td>{extended_data.time}</td>
+                                                
                                             </tr>
                                             <tr>
                                                 <td>Status:</td>
@@ -308,26 +298,20 @@ export const Load = () => {
                                 </div>
 
                                 <Modal.Footer>
-                                    {/* {if (extended_data.p_status == "not started") { */}
                                     {extended_data.p_status == "Not started"
                                         ? <Button onClick={() => startSimultation(extended_data.id)}> Start Simulation </Button>
                                         : (
                                             extended_data.p_status == "In progress"
                                                 ? <Button variant="warning" disabled> Wait </Button>
                                                 :
-                                                <Button onClick={() => downloadSimulation(extended_data.id)} >Download
+                                                <Button onClick={() => downloadSimulation(extended_data.id)} className="btn-success" >Download
                                                 </Button>
-                                            /* <a download="TimeSimP6TransIsoW1.0M350" href="/path/to/image" title="ImageName"><Button variant="success" download> donwload </Button></a> */
                                         )}
-                                    {/* } */}
-                                    {/* {customButton} */}
-                                    {/* <Button onClick={() => test()}> Test </Button> */}
                                     <Button variant="secondary" onClick={handleClose}>
                                         Close
                                     </Button>
                                 </Modal.Footer>
                             </a>
-
                         ))}
                     </Modal.Body>
                 </Modal>
@@ -338,7 +322,6 @@ export const Load = () => {
                     </Modal.Header>
                     <Modal.Body>There is a simulation in progress, please wait and try again later.</Modal.Body>
                     <Modal.Footer>
-                        {/* <Button onClick={() => startSimultation(extended_data.id)}> Start Simulation </Button> */}
                         <Button variant="secondary" onClick={handleCloseModalInProgress}>
                             Close
                         </Button>
