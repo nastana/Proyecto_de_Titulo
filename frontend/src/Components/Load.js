@@ -6,6 +6,7 @@ import Col from "react-bootstrap/Col";
 import Dropdown from 'react-bootstrap/Dropdown';
 import Row from "react-bootstrap/Row";
 import Pagination from './Pagination';
+import Badge from 'react-bootstrap';
 
 const API = process.env.REACT_APP_BACKEND;
 console.log(API);
@@ -34,15 +35,9 @@ export const Load = () => {
             const res = await fetch(`${API}/Load_data`)
             const data = await res.json();
             setSim(data)
-            //console.log(data)
-            //console.log(data.length)
             var maxlength = data.length
             var cantpag = Math.trunc(data.length / 10)
-            //const maxrow = 10
-            console.log(cantpag)
 
-            //console.log(data[1])
-            console.log("Consulta all")
         }
         else if (v === "ID") {
             console.log("Consulta Id")
@@ -107,9 +102,15 @@ export const Load = () => {
                     body: JSON.stringify({
                         n_transmitter: extended_data[0]['n_transmitter'],
                         n_receiver: extended_data[0]['n_receiver'],
-                        distance: extended_data[0]['distance'],
+                        emitter_pitch: extended_data[0]['emitter_pitch'],
+                        receiver_pitch: extended_data[0]['receiver_pitch'],
+                        sensor_edge_margin: extended_data[0]['sensor_edge_margin'],
+                        typical_mesh_size: extended_data[0]['typical_mesh_size'],
                         plate_thickness: extended_data[0]['plate_thickness'],
-                        porosity: extended_data[0]['porosity']
+                        plate_length: extended_data[0]['plate_length'],
+                        sensor_distance: extended_data[0]['sensor_distance'],                        
+                        porosity: extended_data[0]['porosity'],
+                        attenuation: extended_data[0]['attenuation']
                     })
                 });
             }
@@ -150,6 +151,15 @@ export const Load = () => {
         // simulate link click
         document.body.appendChild(element); // Required for this to work in FireFox
         element.click();
+    }
+    const simulationStatus = (status)=>{
+        switch(status){
+            case v === 0: return (<Badge variant="warning">In Progress</Badge>)
+            case v === 1: return (<Badge variant="success">Progress</Badge>)
+            case v === 2: return (<Badge variant="danger">Finished</Badge>)
+
+        }
+
     }
 
 
@@ -198,9 +208,17 @@ export const Load = () => {
                         <thead>
                             <tr>
                                 <th>ID</th>
+                                <th>Code Simulation</th>
+                                <th>Simulation Name</th>                                
                                 <th>Number of emitters</th>
                                 <th>Number of receivers</th>
+                                <th>Emitters Pitch</th>
+                                <th>Receivers Pitch</th>
+                                <th>Sensor Gap</th>
+                                <th>Sensor Distance</th>
+                                <th>Sensor Edge Margin</th>
                                 <th>Typical Mesh Size</th>
+                                <th>Plate Length</th>
                                 <th>Plate thickness</th>
                                 <th>Porosity</th>
                                 <th>Status</th>
@@ -212,12 +230,20 @@ export const Load = () => {
                             {currentPosts.map(currentPosts => (
                                 <tr key={currentPosts.id}>
                                     <td>{currentPosts.id}</td>
+                                    <td>{currentPosts.code_simulation}</td>
+                                    <td>{currentPosts.name_simulation}</td>                                    
                                     <td>{currentPosts.n_transmitter}</td>
                                     <td>{currentPosts.n_receiver}</td>
-                                    <td>{currentPosts.distance}</td>
+                                    <td>{currentPosts.emitter_pitch}</td>
+                                    <td>{currentPosts.receiver_pitch}</td>
+                                    <td>{currentPosts.sensor_gap}</td>
+                                    <td>{currentPosts.sensor_distance}</td>
+                                    <td>{currentPosts.sensor_edge_margin}</td>
+                                    <td>{currentPosts.typical_mesh_size}</td>
+                                    <td>{currentPosts.plate_length}</td>
                                     <td>{currentPosts.plate_thickness}</td>
                                     <td>{currentPosts.porosity}</td>
-                                    <td>{currentPosts.p_status}</td>
+                                    <td></td>
                                     <td>
                                         <Button size="sm" onClick={() => viewInfo(currentPosts.id)}>
                                             View Info
