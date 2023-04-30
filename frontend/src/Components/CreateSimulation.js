@@ -18,6 +18,7 @@ export const CreateSimulation = () => {
     const [plate_thickness, setThickness] = useState('')
     const [porosity, setPorosity] = useState('')
     const [attenuation, setAttenuation] = useState('')
+    const [sensor_width, setSensor_width] = useState('')
     
     const [show, setShow] = useState(false);
     // const [showf, setShowf] = useState(false);
@@ -51,12 +52,29 @@ export const CreateSimulation = () => {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Access-Control-Expose-Headers': Location,
                         },
             body: JSON.stringify({
                 sim_name: sim_name,
+                n_emitters: parseInt(n_emitters),
+                n_receivers: parseInt(n_receivers),
+                sensor_width: parseFloat(sensor_width),
+                sens_distance: parseFloat(sens_distance),
+                emitters_pitch: parseInt(emitters_pitch),
+                receivers_pitch: parseInt(receivers_pitch),
+                sens_edge_margin: parseFloat(sens_edge_margin),
+                mesh_size: parseFloat(mesh_size),
+                plate_thickness: parseInt(plate_thickness),
+                porosity: parseInt(porosity),
+                attenuation: 0,                
+                status: 0
+            })
+        })
+        
+        console.log(JSON.stringify({
+            sim_name: sim_name,
                 n_emitters: n_emitters,
                 n_receivers: n_receivers,
+                sensor_width: sensor_width,
                 sens_distance: sens_distance,
                 emitters_pitch: emitters_pitch,
                 receivers_pitch: receivers_pitch,
@@ -64,15 +82,10 @@ export const CreateSimulation = () => {
                 mesh_size: mesh_size,
                 plate_thickness: plate_thickness,
                 porosity: porosity,
-                attenuation: 0,
-                sensor_width: 0.8,
+                attenuation: 0,                
                 status: 0
-            })
-        })
-        console.log(response.headers.get('Location'))
-        console.log(Location)
-        console.log(response.Location)
-
+        }))
+        console.log(response.body)
         return "response"
     }
     const datacheck = async () => {
@@ -282,6 +295,27 @@ export const CreateSimulation = () => {
                                             placeholder="Enter your plate thickness"
                                             onChange={e => setThickness(e.target.value)}
                                             value={plate_thickness}
+                                            required
+                                        />
+                                    </div>
+                                    <div className="col-1">
+                                        <label className="d-md-flex justify-content-md-end col-form-label">mm</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="form-group">
+                                <div className="row mb-2">
+                                    <div className="col-5">
+                                        <label htmlFor="width" className="col-form-label">Sensor Width:</label>
+                                    </div>
+                                    <div className="col-6">
+                                        <input
+                                            type="number"
+                                            className="form-control"
+                                            id="width"
+                                            placeholder="Enter your sensor width"
+                                            onChange={e => setSensor_width(e.target.value)}
+                                            value={sensor_width}
                                             required
                                         />
                                     </div>

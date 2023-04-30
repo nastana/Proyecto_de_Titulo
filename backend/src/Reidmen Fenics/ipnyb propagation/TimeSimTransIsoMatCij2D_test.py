@@ -8,7 +8,7 @@ from mshr import *
 
 
 #%matplotlib inline
-def fmain (n_transmitter, n_receiver, distance, emitter_pitch, receiver_pitch, sensor_edge_margin, typical_mesh_size, plate_thickness, plate_size, porosity, id):
+def fmain (n_transmitter, n_receiver, distance, emitter_pitch, receiver_pitch, sensor_edge_margin, typical_mesh_size, plate_thickness, plate_size, sensor_width, porosity, id):
     
     import scipy.io as sio
     import numpy as np
@@ -19,13 +19,13 @@ def fmain (n_transmitter, n_receiver, distance, emitter_pitch, receiver_pitch, s
 
     # Rectangle geometry limits
     
-    print('Parametros: ', n_transmitter, n_receiver, distance, emitter_pitch, receiver_pitch, sensor_edge_margin, typical_mesh_size, plate_thickness, plate_size, porosity, id)
+    print('Parametros: ', n_transmitter, n_receiver, distance, emitter_pitch, receiver_pitch, sensor_edge_margin, typical_mesh_size, plate_thickness, plate_size, sensor_width, porosity, id)
     
     Hora_inicio = datetime.now()
     print(Hora_inicio)
     #tiempo_inicio_1 = time.time()
     tiempo_inicio = time.time()
-    zlim=2*sensor_edge_margin + n_transmitter*emitter_pitch + distance + n_receiver*receiver_pitch
+    zlim=(2*sensor_edge_margin) + (n_transmitter*emitter_pitch) + distance + (n_receiver*receiver_pitch)
     ylim = plate_thickness
     #zlim = 2*margen + NE*pE + D+ NR*pR
     #pE pitch emitter
@@ -51,14 +51,14 @@ def fmain (n_transmitter, n_receiver, distance, emitter_pitch, receiver_pitch, s
     nsous = n_transmitter#1 #Cantidad de emisores
 
     #zsous = [n for n in range(10, 25, 2)] version anterior
-    zsous = [n for n in range(sensor_edge_margin, sensor_edge_margin + (n_receiver-1)*emitter_pitch, emitter_pitch)]
+    zsous = [n for n in range(sensor_edge_margin, sensor_edge_margin + ((n_receiver-1)*emitter_pitch), emitter_pitch)]
     #cambios : zsous = [n for n in range(edge margin,edge margin + (n_transmitter-1)*Emitter pitch, Emitter pitch)] 
     #[n for n in range(margen, margen+(NE-1)*pE, pE)]
 
     ysous =  nsous*[ylim*1,]
     #TODO: 1 parametrizable a futuro
     eps = DOLFIN_EPS
-    width = 0.5 #antes era 0.5
+    width = sensor_width #antes era 0.5 sens_width
 
     # Define domain for each source
 

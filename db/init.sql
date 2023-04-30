@@ -9,8 +9,8 @@ CREATE TABLE IF NOT EXISTS simulation (
   n_transmitter INT NOT NULL,
   n_receiver INT NOT NULL,
   emitters_pitch FLOAT DEFAULT NULL,
-  receivers_pitch FLOAT DEFAULT NULL,  
-  sensor_gap FLOAT DEFAULT NULL,
+  receivers_pitch FLOAT DEFAULT NULL,
+  sensor_width FLOAT DEFAULT NULL,
   sensor_distance FLOAT DEFAULT NULL,
   sensor_edge_margin FLOAT DEFAULT NULL,
   typical_mesh_size FLOAT DEFAULT NULL,
@@ -31,10 +31,9 @@ CREATE TABLE IF NOT EXISTS simulation (
     id, n_transmitter, n_receiver, distance, plate_thickness, porosity, result_step_01, p_status, time, image
   ) VALUES ('1', '2','2','5','2','1', 'TimeSimP2TransIsoW2M14.01.mat', 'Done', '00:00:20', NULL); */
 
+/*CREATE USER 'UserBDAT'@'localhost' IDENTIFIED BY 'BDATpassword';*/
 
-/* CREATE USER 'UserBDAT'@'localhost' IDENTIFIED BY 'BDATpassword';
-
-GRANT ALL PRIVILEGES ON * . * TO 'UserBDAT'@'localhost';
+/*GRANT ALL PRIVILEGES ON * . * TO 'UserBDAT'@'localhost';*/
 
 FLUSH PRIVILEGES; */
 
