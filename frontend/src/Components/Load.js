@@ -6,6 +6,7 @@ import Col from "react-bootstrap/Col";
 import Dropdown from 'react-bootstrap/Dropdown';
 import Row from "react-bootstrap/Row";
 import Pagination from './Pagination';
+import Badge from 'react-bootstrap/Badge';
 
 const API = process.env.REACT_APP_BACKEND;
 console.log(API);
@@ -34,15 +35,9 @@ export const Load = () => {
             const res = await fetch(`${API}/Load_data`)
             const data = await res.json();
             setSim(data)
-            //console.log(data)
-            //console.log(data.length)
             var maxlength = data.length
             var cantpag = Math.trunc(data.length / 10)
-            //const maxrow = 10
-            console.log(cantpag)
 
-            //console.log(data[1])
-            console.log("Consulta all")
         }
         else if (v === "ID") {
             console.log("Consulta Id")
@@ -105,11 +100,18 @@ export const Load = () => {
                         'Content-Type': 'application/Json'
                     },
                     body: JSON.stringify({
-                        n_transmitter: extended_data[0]['n_transmitter'],
-                        n_receiver: extended_data[0]['n_receiver'],
-                        distance: extended_data[0]['distance'],
+                        n_emitters: extended_data[0]['n_transmitter'],
+                        n_receivers: extended_data[0]['n_receiver'],
+                        emitters_pitch: extended_data[0]['emitters_pitch'],
+                        receivers_pitch: extended_data[0]['receivers_pitch'],
+                        sens_edge_margin: extended_data[0]['sensor_edge_margin'],
+                        mesh_size: extended_data[0]['typical_mesh_size'],
                         plate_thickness: extended_data[0]['plate_thickness'],
-                        porosity: extended_data[0]['porosity']
+                        plate_length: extended_data[0]['plate_length'],
+                        sens_distance: extended_data[0]['sensor_distance'], 
+                        sensor_width: extended_data[0]['sensor_width'],                       
+                        porosity: extended_data[0]['porosity'],
+                        attenuation: extended_data[0]['attenuation']
                     })
                 });
             }
@@ -150,6 +152,24 @@ export const Load = () => {
         // simulate link click
         document.body.appendChild(element); // Required for this to work in FireFox
         element.click();
+    }
+    const simulationStatus = (status)=>{
+      console.log(status);
+        switch(status){
+            case "0": 
+              return (<Badge bg="danger">Not started</Badge>) 
+              break;
+            case "1": 
+              return (<Badge bg="warning">In Progress</Badge>) 
+              break;
+            case "2": 
+              return (<Badge bg="success">Finished</Badge>) 
+              break;
+            
+            default:
+            return (<p>Error</p>)
+        }
+
     }
 
 
@@ -198,9 +218,15 @@ export const Load = () => {
                         <thead>
                             <tr>
                                 <th>ID</th>
+                                <th>Code Simulation</th>
+                                <th>Simulation Name</th>                                
                                 <th>Number of emitters</th>
                                 <th>Number of receivers</th>
-                                <th>Typical Mesh Size</th>
+                                <th>Emitters Pitch</th>
+                                <th>Receivers Pitch</th>
+                                <th>Distance</th>
+                                <th>Edge Margin</th>
+                                <th>Mesh Size</th>
                                 <th>Plate thickness</th>
                                 <th>Porosity</th>
                                 <th>Status</th>
@@ -212,12 +238,18 @@ export const Load = () => {
                             {currentPosts.map(currentPosts => (
                                 <tr key={currentPosts.id}>
                                     <td>{currentPosts.id}</td>
+                                    <td>{currentPosts.code_simulation}</td>
+                                    <td>{currentPosts.name_simulation}</td>                                    
                                     <td>{currentPosts.n_transmitter}</td>
                                     <td>{currentPosts.n_receiver}</td>
-                                    <td>{currentPosts.distance}</td>
+                                    <td>{currentPosts.emitters_pitch}</td>
+                                    <td>{currentPosts.receivers_pitch}</td>
+                                    <td>{currentPosts.sensor_distance}</td>
+                                    <td>{currentPosts.sensor_edge_margin}</td>
+                                    <td>{currentPosts.typical_mesh_size}</td>
                                     <td>{currentPosts.plate_thickness}</td>
                                     <td>{currentPosts.porosity}</td>
-                                    <td>{currentPosts.p_status}</td>
+                                    <td>{simulationStatus(currentPosts.p_status)}</td>
                                     <td>
                                         <Button size="sm" onClick={() => viewInfo(currentPosts.id)}>
                                             View Info
@@ -263,9 +295,31 @@ export const Load = () => {
                                                 <td>{extended_data.n_receiver}</td>
                                                 <td></td>
                                             </tr>
+                                           <tr>
+                                                <td>Emitters Pitch:</td>
+                                                <td>{extended_data.emitters_pitch}</td>
+                                                <td>[mm]</td>
+                                            </tr>
+                                           <tr>
+                                                <td>Receivers Pitch:</td>
+                                                <td>{extended_data.receivers_pitch}</td>
+                                                <td>[mm]</td>
+                                            </tr>
+                                           <tr>
+                                                <td>Sensor Gap:</td>
+                                                <td>{extended_data.sensor_gap}</td>
+                                                <td></td>
+                                            </tr>
                                             <tr>
                                                 <td>Typical Mesh Size:</td>
-                                                <td>{extended_data.distance}</td>
+                                                <td>{extended_data.typical_mesh_size}</td>
+                                                <td>
+                                                    <label>[mm]</label>
+                                                </td>
+                                            </tr>
+                                           <tr>
+                                                <td>Plate Length:</td>
+                                                <td>{extended_data.plate_length}</td>
                                                 <td>
                                                     <label>[mm]</label>
                                                 </td>
@@ -291,17 +345,17 @@ export const Load = () => {
                                             </tr>
                                             <tr>
                                                 <td>Status:</td>
-                                                <td>{extended_data.p_status}</td>
+                                                <td>{simulationStatus(extended_data.p_status)}</td>
                                             </tr>
                                         </tbody>
                                     </table>
                                 </div>
 
                                 <Modal.Footer>
-                                    {extended_data.p_status == "Not started"
+                                    {extended_data.p_status == 0
                                         ? <Button onClick={() => startSimultation(extended_data.id)}> Start Simulation </Button>
                                         : (
-                                            extended_data.p_status == "In progress"
+                                            extended_data.p_status == 1
                                                 ? <Button variant="warning" disabled> Wait </Button>
                                                 :
                                                 <Button onClick={() => downloadSimulation(extended_data.id)} className="btn-success" >Download

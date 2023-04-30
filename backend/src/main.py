@@ -7,6 +7,7 @@ import scipy.io as sio
 import shutil
 import sys
 import os
+import random
 from io import BytesIO
 from dotenv import load_dotenv
 
@@ -19,7 +20,7 @@ load_dotenv()
 dockerRoute = "src/"
 
 sys.path.append( dockerRoute + "Reidmen Fenics/ipnyb propagation")
-
+#sys.path.append("Reidmen Fenics/ipnyb propagation")
 print(sys.path)
 Reidmen = __import__("TimeSimTransIsoMatCij2D_test")
 
@@ -51,7 +52,7 @@ def Index():
 def test():
 
     cur = mysql.connection.cursor()
-    cur.execute('SELECT * FROM timesimtransisomat_first_step01')
+    cur.execute('SELECT * FROM simulation')
     data = cur.fetchall()
     cur.close()
     print('valor de data:', data)
@@ -61,22 +62,27 @@ def test():
 
 @app.route('/Input_data', methods=['POST'])
 def input_data():
-
+    sim_name = request.json['sim_name']
     n_emitters = request.json['n_emitters']
     n_receivers = request.json['n_receivers']
+    sens_distance = request.json['sens_distance']
+    emitters_pitch = request.json['emitters_pitch']
+    receivers_pitch = request.json['receivers_pitch']
+    sens_edge_margin = request.json['sens_edge_margin']
     mesh_size = request.json['mesh_size']
     plate_thickness = request.json['plate_thickness']
-    porosity = request.json['porosity']
-    status = "Not started"
+    porosity = request.json['porosity']       
+    attenuation = request.json['attenuation']
+    sensor_width = request.json['sensor_width']#pitch
+    status = 0
 
-    isValid, parameter, typeReceived = ValidData(n_emitters, n_receivers, mesh_size, plate_thickness, porosity)
-    
+    isValid, parameter, typeReceived = ValidData(n_emitters, n_receivers, emitters_pitch,receivers_pitch,sensor_width,sens_edge_margin,sens_distance,plate_thickness, porosity)
+    code_simulation = random.randint(11000, 32434)
     if (isValid):
+        plate_length = sens_edge_margin*2 + n_emitters*emitters_pitch +sens_distance+ n_receivers*receivers_pitch
         cur = mysql.connection.cursor()
-        cur.execute("INSERT INTO timesimtransisomat_first_step01 (n_transmitter, n_receiver, distance, plate_thickness, porosity, p_status) VALUES (%s,%s,%s,%s,%s,%s)",
-                    (n_emitters, n_receivers, mesh_size, plate_thickness, porosity, status))
-
-        last_id = cur.lastrowid
+        cur.execute("INSERT INTO simulation (code_simulation, name_simulation, n_transmitter, n_receiver, emitters_pitch, receivers_pitch, sensor_width, sensor_distance, sensor_edge_margin, typical_mesh_size, plate_thickness, plate_length, porosity, attenuation, p_status) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
+        (code_simulation, sim_name, n_emitters, n_receivers, emitters_pitch, receivers_pitch, sensor_width, sens_distance, sens_edge_margin, mesh_size, plate_thickness, plate_length, porosity, attenuation, status))
         mysql.connection.commit()
 
         flash('data Added successfully')
@@ -91,18 +97,27 @@ def input_data():
 def load_data():
     data_t = []
     cur = mysql.connection.cursor()
-    cur.execute('SELECT * FROM timesimtransisomat_first_step01 ORDER BY id DESC')
+    cur.execute('SELECT * FROM simulation ORDER BY id DESC')
     data = cur.fetchall()
     cur.close()
     for doc in data:
         data_t.append({
             'id': doc[0],
-            'n_transmitter': doc[1],
-            'n_receiver': doc[2],
-            'distance': doc[3],
-            'plate_thickness': doc[4],
-            'porosity': float(doc[5]),
-            'p_status' : doc[7]
+            'code_simulation': doc[1],
+            'name_simulation': doc[2],
+            'n_transmitter': doc[3],
+            'n_receiver': doc[4],
+            'emitters_pitch': doc[5],
+            'receivers_pitch': doc[6],
+            'sensor_width': float(doc[7]),
+            'sensor_distance': doc[8],
+            'sensor_edge_margin': float(doc[9]),
+            'typical_mesh_size': doc[10],
+            'plate_thickness': doc[11],
+            'plate_length': doc[12],
+            'porosity': float(doc[13]),
+            'attenuation': doc[14],
+            'p_status' : doc[16]    
         })
     return jsonify(data_t)
 
@@ -111,7 +126,7 @@ def delete_sim(id):
     sub_id = id
     cur = mysql.connection.cursor()
     cur.execute(
-        "DELETE FROM timesimtransisomat_first_step01 WHERE id = {0}".format(sub_id))
+        "DELETE FROM simulation WHERE id = {0}".format(sub_id))
     mysql.connection.commit()
     cur.close()
     return jsonify("DELETE", id)
@@ -122,19 +137,27 @@ def load_data_id(id):
     sub_id = id
     cur = mysql.connection.cursor()
     cur.execute(
-        "SELECT * FROM timesimtransisomat_first_step01 WHERE id = {0}".format(sub_id))
+        "SELECT * FROM simulation WHERE id = {0}".format(sub_id))
     data = cur.fetchall()
     cur.close()
     for doc in data:
         data_t.append({
             'id': doc[0],
-            'n_transmitter': doc[1],
-            'n_receiver': doc[2],
-            'distance': doc[3],
-            'plate_thickness': doc[4],
-            'porosity': float(doc[5]),
-            'p_status' : doc[7],
-            'time' : str(doc[8])
+            'code_simulation': doc[1],
+            'name_simulation': doc[2],
+            'n_transmitter': doc[3],
+            'n_receiver': doc[4],
+            'emitters_pitch': doc[5],
+            'receivers_pitch': doc[6],
+            'sensor_width': float(doc[7]),
+            'sensor_distance': doc[8],
+            'sensor_edge_margin': float(doc[9]),
+            'typical_mesh_size': doc[10],
+            'plate_thickness': doc[11],
+            'plate_length': doc[12],
+            'porosity': float(doc[13]),
+            'attenuation': doc[14],
+            'p_status' : doc[16]    
         })
     return jsonify(data_t)
 
@@ -144,47 +167,64 @@ def load_data_porosity(v):
     poro = v
     cur = mysql.connection.cursor()
     cur.execute(
-        "SELECT * FROM timesimtransisomat_first_step01 WHERE porosity = {0}".format(poro))
+        "SELECT * FROM simulation WHERE porosity = {0}".format(poro))
     data = cur.fetchall()
     cur.close()
     for doc in data:
         data_t.append({
             'id': doc[0],
-            'n_transmitter': doc[1],
-            'n_receiver': doc[2],
-            'distance': doc[3],
-            'plate_thickness': doc[4],
-            'porosity': float(doc[5]),
-            'p_status' : doc[7]
+            'code_simulation': doc[1],
+            'name_simulation': doc[2],
+            'n_transmitter': doc[3],
+            'n_receiver': doc[4],
+            'emitters_pitch': doc[5],
+            'receivers_pitch': doc[6],
+            'sensor_width': float(doc[7]),
+            'sensor_distance': doc[8],
+            'sensor_edge_margin': float(doc[9]),
+            'typical_mesh_size': doc[10],
+            'plate_thickness': doc[11],
+            'plate_length': doc[12],
+            'porosity': float(doc[13]),
+            'attenuation': doc[14],
+            'p_status' : doc[16]    
         })
     return jsonify(data_t)
 
 @app.route('/Load_data/distance/<v>', methods=['GET'])
 def load_data_distance(v):
-    #print(request)
     data_t = []
     distance = v
     cur = mysql.connection.cursor()
     cur.execute(
-        "SELECT * FROM timesimtransisomat_first_step01 WHERE distance like '%{0}%'".format(distance))
+        "SELECT * FROM simulation WHERE distance like '%{0}%'".format(distance))
     data = cur.fetchall()
     cur.close()
     for doc in data:
         data_t.append({
             'id': doc[0],
-            'n_transmitter': doc[1],
-            'n_receiver': doc[2],
-            'distance': doc[3],
-            'plate_thickness': doc[4],
-            'porosity': float(doc[5]),
-            'p_status' : doc[7]
+            'code_simulation': doc[1],
+            'name_simulation': doc[2],
+            'n_transmitter': doc[3],
+            'n_receiver': doc[4],
+            'emitters_pitch': doc[5],
+            'receivers_pitch': doc[6],
+            'sensor_width': float(doc[7]),
+            'sensor_distance': doc[8],
+            'sensor_edge_margin': float(doc[9]),
+            'typical_mesh_size': doc[10],
+            'plate_thickness': doc[11],
+            'plate_length': doc[12],
+            'porosity': float(doc[13]),
+            'attenuation': doc[14],
+            'p_status' : doc[16]    
         })
     return jsonify(data_t)
 
 @app.route('/Load_data/download/<v>', methods=['GET'])
 def load_data_download(v):
     cur = mysql.connection.cursor()
-    cur.execute("select image, result_step_01 from timesimtransisomat_first_step01 WHERE id = {0}".format(v))
+    cur.execute("select image, result_step_01 from simulation WHERE id = {0}".format(v))
     data = cur.fetchone()
     filedata = data[0]
     filename = data[1]
@@ -194,19 +234,25 @@ def load_data_download(v):
 
 @app.route('/load_data_PUT/<id>', methods=['PUT'])
 def load_result_id_put(id):
-    sub_id = id
-    
-    n_transmitter = request.json['n_transmitter']
-    n_receiver = request.json['n_receiver']
-    distance = request.json['distance']
+    sub_id = id    
+    n_transmitter = request.json['n_emitters']
+    n_receiver = request.json['n_receivers']
+    emitters_pitch = request.json['emitters_pitch']
+    receivers_pitch = request.json['receivers_pitch']
+    sensor_width = request.json['sensor_width']
+    sensor_edge_margin = request.json['sens_edge_margin']
+    typical_mesh_size = request.json['mesh_size']    
+    sensor_distance = request.json['sens_distance']
     plate_thickness = request.json['plate_thickness']
     porosity = request.json['porosity']
+    plate_length = request.json['plate_length']
+    attenuation = request.json['attenuation']
     cur = mysql.connection.cursor()
-    cur.execute("UPDATE timesimtransisomat_first_step01 SET p_status = 'In progress'  WHERE id = {0};".format(sub_id))
+    cur.execute("UPDATE simulation SET p_status = 1  WHERE id = {0};".format(sub_id))
     mysql.connection.commit()
    
   
-    filename,time = Reidmen.fmain(n_transmitter,n_receiver,distance,plate_thickness,porosity,sub_id)
+    filename,time = Reidmen.fmain(n_transmitter,n_receiver,sensor_distance, emitters_pitch, receivers_pitch, sensor_edge_margin, typical_mesh_size, plate_thickness, plate_length, sensor_width,porosity,sub_id)
     print("Nombre archivo",filename)
 
     filepath = dockerRoute + "Reidmen Fenics/ipnyb propagation/Files_mat/" + filename
@@ -214,7 +260,7 @@ def load_result_id_put(id):
     file = read_file(filepath)
 
     cur = mysql.connection.cursor()
-    sql = "UPDATE timesimtransisomat_first_step01 SET result_step_01 = %s, p_status = 'Done', time = %s, image = %s  WHERE id = %s;"
+    sql = "UPDATE simulation SET result_step_01 = %s, p_status = 2, time = %s, image = %s  WHERE id = %s;"
     cur.execute(sql,(filename, time, file, sub_id))
     mysql.connection.commit()
 
@@ -233,27 +279,34 @@ def load_data_id_test(id):
     sub_id = id
     cur = mysql.connection.cursor()
     cur.execute(
-        "SELECT * FROM timesimtransisomat_first_step01 WHERE id = {0}".format(sub_id))
+        "SELECT * FROM simulation WHERE id = {0}".format(sub_id))
     data = cur.fetchall()
     cur.close()
     for doc in data:
         data_t.append({
             'id': doc[0],
-            'n_transmitter': doc[1],
-            'n_receiver': doc[2],
-            'distance': doc[3],
-            'plate_thickness': doc[4],
-            'porosity': float(doc[5]),
-            'result_step_01': doc[6],
-            'p_status' : doc[7],
-            'time' : str(doc[8])
+            'code_simulation': doc[1],
+            'name_simulation': doc[2],
+            'n_transmitter': doc[3],
+            'n_receiver': doc[4],
+            'emitters_pitch': doc[5],
+            'receivers_pitch': doc[6],
+            'sensor_width': float(doc[7]),
+            'sensor_distance': doc[8],
+            'sensor_edge_margin': float(doc[9]),
+            'typical_mesh_size': doc[10],
+            'plate_thickness': doc[11],
+            'plate_length': doc[12],
+            'porosity': float(doc[13]),
+            'attenuation': doc[14],
+            'p_status' : doc[16]    
         })
     return jsonify(data_t)
 
 @app.route('/Active_Simulations', methods=['GET'])
 def ActiveSims():
     cur = mysql.connection.cursor()
-    cur.execute("SELECT count(*) FROM timesimtransisomat_first_step01 where p_status like '%In Progress%'")
+    cur.execute("SELECT count(*) FROM simulation where p_status = 1")
     data = cur.fetchone()
     cur.close()
     data_t = {
@@ -272,13 +325,21 @@ def read_file(filename):
 def result():
     return 'result'
 
-def ValidData(n_transmitter, n_receiver, distance, plate_thickness, porosity):
+def ValidData(n_transmitter, n_receiver, emitters_pitch, recivers_pitch,sensor_width, sensor_edge, distance, plate_thickness, porosity):
 
 
     if(type(n_transmitter) is not int):
         return False, "n_transmitter", str(type(n_transmitter))
     elif(type(n_receiver) is not int):
         return False, "n_receiver", str(type(n_receiver))
+    elif(type(emitters_pitch) is not int):
+        return False, "emitters_pitch", str(type(emitters_pitch))
+    elif(type(recivers_pitch) is not int):
+        return False, "recivers_pitch", str(type(recivers_pitch))
+    elif(type(sensor_width) is not int and type(sensor_width) is not float):
+        return False, "sensor_width", str(type(sensor_width))       
+    elif(type(sensor_edge) is not int and type(sensor_edge) is not float):
+        return False, "sensor_edge", str(type(sensor_edge))    
     elif(type(distance) is not int and type(distance) is not float):
         return False, "distance", str(type(distance))
     elif(type(plate_thickness) is not int):

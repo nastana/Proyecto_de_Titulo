@@ -8,7 +8,7 @@ from mshr import *
 
 
 #%matplotlib inline
-def fmain (n_transmitter,n_receiver,distance,plate_thickness,porosity,id):
+def fmain (n_transmitter, n_receiver, distance, emitter_pitch, receiver_pitch, sensor_edge_margin, typical_mesh_size, plate_thickness, plate_size, sensor_width, porosity, id):
     
     import scipy.io as sio
     import numpy as np
@@ -18,11 +18,21 @@ def fmain (n_transmitter,n_receiver,distance,plate_thickness,porosity,id):
     from ufl import Identity, indices, as_tensor
 
     # Rectangle geometry limits
+    
+    print('Parametros: ', n_transmitter, n_receiver, distance, emitter_pitch, receiver_pitch, sensor_edge_margin, typical_mesh_size, plate_thickness, plate_size, sensor_width, porosity, id)
+    
     Hora_inicio = datetime.now()
     print(Hora_inicio)
     #tiempo_inicio_1 = time.time()
     tiempo_inicio = time.time()
-    zlim, ylim = 70., plate_thickness#0.5 #Cambiar 0.5, 1, 2, 3
+    zlim=(2*sensor_edge_margin) + (n_transmitter*emitter_pitch) + distance + (n_receiver*receiver_pitch)
+    ylim = plate_thickness
+    #zlim = 2*margen + NE*pE + D+ NR*pR
+    #pE pitch emitter
+    #Nr number of receivers
+    #pR pitch receiver
+    #D distance between emitter and receiver
+
     # Porosity level from Mathilde data
     # this data starts from 1% porosity values!
     #por = 11 # the porosity level is por+1
@@ -39,9 +49,16 @@ def fmain (n_transmitter,n_receiver,distance,plate_thickness,porosity,id):
     # Define source locations
     # Using notation consistent with the 3D-case
     nsous = n_transmitter#1 #Cantidad de emisores
-    zsous, ysous = [n for n in range(10, 25, 2)], nsous*[ylim,]
+
+    #zsous = [n for n in range(10, 25, 2)] version anterior
+    zsous = [n for n in range(sensor_edge_margin, sensor_edge_margin + ((n_receiver-1)*emitter_pitch), emitter_pitch)]
+    #cambios : zsous = [n for n in range(edge margin,edge margin + (n_transmitter-1)*Emitter pitch, Emitter pitch)] 
+    #[n for n in range(margen, margen+(NE-1)*pE, pE)]
+
+    ysous =  nsous*[ylim*1,]
+    #TODO: 1 parametrizable a futuro
     eps = DOLFIN_EPS
-    width = 0.5 #antes era 0.5
+    width = sensor_width #antes era 0.5 sens_width
 
     # Define domain for each source
 
@@ -145,13 +162,11 @@ def fmain (n_transmitter,n_receiver,distance,plate_thickness,porosity,id):
         v_n.vector()[:], a_n.vector()[:] = v_vec, a_vec
         u_n.vector()[:] = u.vector()
 
-    #tiempo_final_1 = time.time()
-    #tiempo_ejecucion_1 = tiempo_final_1 - tiempo_inicio_1
-    #print ("Tiempo ejecución 1:", tiempo_ejecucion_1)
-    # Position of sensor to obtain the dforce!
-    #tiempo_inicio_2 = time.time()
+
     nsens = n_receiver#1# Number of sensors separated at 0.4081 mm # RECEPTORES
-    zsens, ysens = np.linspace(35, 55, num=nsens), nsens*[ylim,]
+    zsens = np.linspace(sensor_edge_margin + n_transmitter + distance, sensor_edge_margin+ n_transmitter*emitter_pitch+distance + (n_receiver-1)*receiver_pitch, num=nsens)
+    ysens = nsens*[ylim*1,]
+    #ZSENS =np.linspace(MARGIN + NE*Pe + Distance Between Arrays, margen+ NE*PE+D + (NR-1)*pR,num =nsens)
 
     # Define function spaces and boundary conditions
     pdim = 1 #Antes era 1
@@ -181,20 +196,10 @@ def fmain (n_transmitter,n_receiver,distance,plate_thickness,porosity,id):
 
     }
     for i in range(nsous):
-        print(i)
-        #test = "DomSource_"+str(i)
         name = "DomSource_"+str(i+1)
         func = dom[name]
         func().mark(boundaries, 20+i+1)
 
-    #DomSource_1().mark(boundaries, 21)
-    # DomSource_2().mark(boundaries, 22)
-    # DomSource_3().mark(boundaries, 23)
-    # DomSource_4().mark(boundaries, 24)
-    # DomSource_5().mark(boundaries, 25)
-    # DomSource_6().mark(boundaries, 26)
-    # DomSource_7().mark(boundaries, 27)
-    # DomSource_8().mark(boundaries, 28)
 
     # Define new measure for boundaries
     global dx

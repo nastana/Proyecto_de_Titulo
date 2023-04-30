@@ -49,7 +49,7 @@ RUN pip install -r ./requeriments.txt
 
 COPY . /app
 
-EXPOSE 80
+EXPOSE 3000
 
 ENTRYPOINT [ "python3" ]
 
