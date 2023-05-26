@@ -229,6 +229,7 @@ export const Load = () => {
                                 <th>Mesh Size</th>
                                 <th>Plate thickness</th>
                                 <th>Porosity</th>
+                                <th>Attenuation</th>
                                 <th>Status</th>
                                 <th>Results</th>
                                 <th>Action</th>
@@ -249,6 +250,7 @@ export const Load = () => {
                                     <td>{currentPosts.typical_mesh_size}</td>
                                     <td>{currentPosts.plate_thickness}</td>
                                     <td>{currentPosts.porosity}</td>
+                                    <td>{currentPosts.attenuation === 1? 'Yes':'No'}</td>
                                     <td>{simulationStatus(currentPosts.p_status)}</td>
                                     <td>
                                         <Button size="sm" onClick={() => viewInfo(currentPosts.id)}>

@@ -65,7 +65,7 @@ export const CreateSimulation = () => {
                 mesh_size: parseFloat(mesh_size),
                 plate_thickness: parseInt(plate_thickness),
                 porosity: parseInt(porosity),
-                attenuation: 0,                
+                attenuation: attenuation,                
                 status: 0
             })
         })
@@ -82,14 +82,14 @@ export const CreateSimulation = () => {
                 mesh_size: mesh_size,
                 plate_thickness: plate_thickness,
                 porosity: porosity,
-                attenuation: 0,                
+                attenuation: attenuation,                
                 status: 0
         }))
         console.log(response.body)
         return "response"
     }
     const datacheck = async () => {
-        if (n_emitters === '' || n_receivers === ''  || plate_thickness === '' || porosity === '') {
+        if (n_emitters === '' || n_receivers === ''  || plate_thickness === '' || porosity === '' || attenuation === '') {
             <div className="alert alert-danger">
                 <strong>Danger!</strong> Indicates a dangerous or potentially negative action.
             </div>
@@ -346,23 +346,35 @@ export const CreateSimulation = () => {
                                 </div>
                             </div>
                             <div className="form-group">
-                                <div className="row mb-2">
+                                <div className="row mb-2 align-items-center">
                                     <div className="col-5">
                                         <label htmlFor="attenuation" className="col-form-label">Attenuation:</label>
                                     </div>
                                     <div className="col-6">
-                                        <input
-                                            type="number"
-                                            className="form-control"
-                                            id="attenuation"
-                                            placeholder="Enter the attenuation value"
-                                            onChange={e => setAttenuation(e.target.value)}
-                                            value={attenuation}
-                                            disabled
-                                        />
-                                    </div>
-                                    <div className="col-1">
-                                        <label className="d-md-flex justify-content-md-end col-form-label">%</label>
+                                        <div className="form-check form-check-inline">
+                                            <input
+                                                className="form-check-input"
+                                                type="radio"
+                                                name="attenuation"
+                                                id="attenuationYes"
+                                                value="1"
+                                                onChange={e => setAttenuation(e.target.value)}
+                                                required
+                                            />
+                                            <label className="form-check-label" htmlFor="attenuationYes">Yes</label>
+                                        </div>
+                                        <div className="form-check form-check-inline">
+                                            <input
+                                                className="form-check-input"
+                                                type="radio"
+                                                name="attenuation"
+                                                id="attenuationNo"
+                                                value="0"
+                                                onChange={e => setAttenuation(e.target.value)}
+                                                required
+                                            />
+                                            <label className="form-check-label" htmlFor="attenuationNo">No</label>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
