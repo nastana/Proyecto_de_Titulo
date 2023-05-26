@@ -252,9 +252,9 @@ def load_result_id_put(id):
     mysql.connection.commit()
    
   
-    filename,time = Reidmen.fmain(n_transmitter,n_receiver,sensor_distance, emitters_pitch, receivers_pitch, sensor_edge_margin, typical_mesh_size, plate_thickness, plate_length, sensor_width,porosity,sub_id)
+    filename,time = Reidmen.fmain(n_transmitter,n_receiver,sensor_distance, emitters_pitch, receivers_pitch, sensor_edge_margin, typical_mesh_size, plate_thickness, plate_length, sensor_width,porosity,attenuation,sub_id)
     print("Nombre archivo",filename)
-
+    
     filepath = dockerRoute + "Reidmen Fenics/ipnyb propagation/Files_mat/" + filename
     
     file = read_file(filepath)
