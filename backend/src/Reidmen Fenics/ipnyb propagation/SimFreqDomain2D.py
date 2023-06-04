@@ -16,13 +16,13 @@ def fmain (n_transmitter, n_receiver, distance, emitter_pitch, receiver_pitch, s
     print('Parametros: ', n_transmitter, n_receiver, distance, emitter_pitch, receiver_pitch, sensor_edge_margin, typical_mesh_size, plate_thickness, plate_size, sensor_width, porosity, attenuation, id)
 
     # Obtain the experimental data from .mat file
-    C_mathilde = sio.loadmat(r"Files_mat/C_values_mathilde.mat")
+    #C_mathilde = sio.loadmat(r"src/Reidmen Fenics/ipnyb propagation/Files_mat/C_values_mathilde.mat")
 
     # Define the constants
     # The stiffness constants in [GPa] --> [g/mm(\mu sec)^2]
     # are given by the mathilde .mat file of 5%
     #print('WITH ATTENUATION')
-    path = 'Files_mat/attenuation'
+    path = 'src/Reidmen Fenics/ipnyb propagation/Files_mat/attenuation'
     M = pd.read_csv(path + '.csv').values
     # First dimension: porosity
     p = np.arange(0.01, 0.48, 0.01)
@@ -48,7 +48,7 @@ def fmain (n_transmitter, n_receiver, distance, emitter_pitch, receiver_pitch, s
 
     C11 = C22
     C13 = C23
-    d = np.reshape(C_mathilde['d'], (30,))*1E-3
+    d = 2.03 * (1 - p) + p
     #C_mathilde.keys()
 
     # Rectangle geometry limits
@@ -401,4 +401,4 @@ def fmain (n_transmitter, n_receiver, distance, emitter_pitch, receiver_pitch, s
     print("Tiempo de ejecución",tiempo_ejecucion)
 
     #Save file into database
-    #return filename,tiempo_ejecucion
+    return filename,tiempo_ejecucion

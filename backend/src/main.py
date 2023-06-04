@@ -22,7 +22,8 @@ dockerRoute = "src/"
 sys.path.append( dockerRoute + "Reidmen Fenics/ipnyb propagation")
 #sys.path.append("Reidmen Fenics/ipnyb propagation")
 print(sys.path)
-Reidmen = __import__("TimeSimTransIsoMatCij2D_test")
+Reidmen     = __import__("TimeSimTransIsoMatCij2D_test")
+ReidmenFreq = __import__("SimFreqDomain2D")
 
 # creating the Flask application
 app = Flask(__name__)
@@ -252,7 +253,10 @@ def load_result_id_put(id):
     mysql.connection.commit()
    
   
-    filename,time = Reidmen.fmain(n_transmitter,n_receiver,sensor_distance, emitters_pitch, receivers_pitch, sensor_edge_margin, typical_mesh_size, plate_thickness, plate_length, sensor_width,porosity,attenuation,sub_id)
+    if(attenuation == 1):
+        filename,time = ReidmenFreq.fmain(n_transmitter,n_receiver,sensor_distance, emitters_pitch, receivers_pitch, sensor_edge_margin, typical_mesh_size, plate_thickness, plate_length, sensor_width,porosity,attenuation,sub_id)
+    else:
+        filename,time = Reidmen.fmain(n_transmitter,n_receiver,sensor_distance, emitters_pitch, receivers_pitch, sensor_edge_margin, typical_mesh_size, plate_thickness, plate_length, sensor_width,porosity,attenuation,sub_id)
     print("Nombre archivo",filename)
     
     filepath = dockerRoute + "Reidmen Fenics/ipnyb propagation/Files_mat/" + filename
