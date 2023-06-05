@@ -16,7 +16,7 @@ def fmain (n_transmitter, n_receiver, distance, emitter_pitch, receiver_pitch, s
     print('Parametros: ', n_transmitter, n_receiver, distance, emitter_pitch, receiver_pitch, sensor_edge_margin, typical_mesh_size, plate_thickness, plate_size, sensor_width, porosity, attenuation, id)
 
     # Obtain the experimental data from .mat file
-    #C_mathilde = sio.loadmat(r"src/Reidmen Fenics/ipnyb propagation/Files_mat/C_values_mathilde.mat")
+    C_mathilde = sio.loadmat(r"src/Reidmen Fenics/ipnyb propagation/Files_mat/C_values_mathilde.mat")
 
     # Define the constants
     # The stiffness constants in [GPa] --> [g/mm(\mu sec)^2]
@@ -48,7 +48,7 @@ def fmain (n_transmitter, n_receiver, distance, emitter_pitch, receiver_pitch, s
 
     C11 = C22
     C13 = C23
-    d = 2.03 * (1 - p) + p
+    d = np.reshape(C_mathilde['d'], (30,))*1E-3
     #C_mathilde.keys()
 
     # Rectangle geometry limits
@@ -388,9 +388,9 @@ def fmain (n_transmitter, n_receiver, distance, emitter_pitch, receiver_pitch, s
           'zsens': zsens, 'ysens': ysens, 'nfreq': nfreq,
           'freqs': freqs, 'omegas': omegas,
           'sol_sensors_z': sol_sensors_z, 'sol_sensors_y': sol_sensors_y}
-    filename1 = 'src/Reidmen Fenics/ipnyb propagation/Files_mat/TimeSimP'+str(por+1)+'TransIsoW'+ str(ylim)+'M'+str(size) + str(id) + '.mat'
-    filename = 'TimeSimP'+str(por+1)+'TransIsoW'+ str(ylim)+'M'+str(size) + str(id) + '.mat'
-    #sio.savemat(filename1, savedic, appendmat=True)
+    filename1 = 'src/Reidmen Fenics/ipnyb propagation/Files_mat/FreqSimp'+str(por+1)+'TransIsoW'+ str(ylim)+'M'+str(size) + str(id) + '.mat'
+    filename = 'FreqSimp'+str(por+1)+'TransIsoW'+ str(ylim)+'M'+str(size) + str(id) + '.mat'
+    sio.savemat(filename1, savedic, appendmat=True)
 
     ## Zona de Pruebas de tiempo ##
 

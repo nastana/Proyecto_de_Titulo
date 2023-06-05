@@ -261,6 +261,7 @@ def load_result_id_put(id):
     
     filepath = dockerRoute + "Reidmen Fenics/ipnyb propagation/Files_mat/" + filename
     
+    print(filepath)
     file = read_file(filepath)
 
     cur = mysql.connection.cursor()
