@@ -286,14 +286,13 @@ def fmain (n_transmitter, n_receiver, distance, emitter_pitch, receiver_pitch, s
 
     # Frequency array to consider
     freqs = np.arange(0., 2., step=20/2048)# ~ [MHz], step=20/2048
-    omegas = 1j*2*pi*freqs
-    print(omegas)
+    omegas = 2*pi*freqs
+    # print(omegas)
     # Define number of frequencies
     nfreq = freqs.shape[0]
     # Define sensors arrays
     sol_sensors_z = np.zeros((nsens, nfreq, nsous))
     sol_sensors_y = np.zeros((nsens, nfreq, nsous))
-
 
     """_____________________INFO_____________________"""
     # Print number of point at the boundary
