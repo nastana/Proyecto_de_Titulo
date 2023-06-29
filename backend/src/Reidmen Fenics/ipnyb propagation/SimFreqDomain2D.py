@@ -110,7 +110,7 @@ def fmain (n_transmitter, n_receiver, distance, emitter_pitch, receiver_pitch, s
     zlim, ylim = 70., 2.8
     # Porosity level from Mathilde data 
     # this data starts from 1% porosity values!
-    por = porosity# the porosity level is por+1
+    por = porosity - 1# the porosity level is por+1
     # Define domain size 
     size = 400
     # generate f and create mesh
