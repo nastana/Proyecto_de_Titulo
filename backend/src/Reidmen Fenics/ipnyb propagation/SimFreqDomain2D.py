@@ -26,7 +26,7 @@ def fmain (n_transmitter, n_receiver, distance, emitter_pitch, receiver_pitch, s
     # are given by the mathilde .mat file of 5%
     #print('WITH ATTENUATION')
 
-    """______________________C AND D VALUES FROM ATTENUATION.CSV______________________"""
+    """______________________C AND D VALUES FROM ATTENUATION.CSV______________________
     path = 'src/Reidmen Fenics/ipnyb propagation/Files_mat/attenuation'
     M = pd.read_csv(path + '.csv').values
     # First dimension: porosity
@@ -57,7 +57,7 @@ def fmain (n_transmitter, n_receiver, distance, emitter_pitch, receiver_pitch, s
     C33 = C33 + D33
     C55 = C55 + D55
     C12 = C12 + D12
-
+    """
 
     """______________________C VALUES FROM MATHILDE______________________"""
     C11 = np.reshape(C_mathilde['C11'], (30,))*1E-3
@@ -326,7 +326,7 @@ def fmain (n_transmitter, n_receiver, distance, emitter_pitch, receiver_pitch, s
     # Obtain the stiffness tensor
     C = VoigtToTensor(C_voigt)
 
-    """_____________________D VALUES_____________________"""
+    """_____________________D VALUES_____________________
     # We take the standard density
     rho = d[por] # [g/cm^3] --> [g/(mm)^3]
     # Define the Voigt matrix representing the tensor
@@ -339,7 +339,7 @@ def fmain (n_transmitter, n_receiver, distance, emitter_pitch, receiver_pitch, s
                     ])
     # Obtain the stiffness tensor
     D = VoigtToTensor(D_voigt)
-    
+    """
     """_____________________FUNCTIONS_____________________"""
     # Define stress tensor
     def sigma(u):
@@ -405,11 +405,12 @@ def fmain (n_transmitter, n_receiver, distance, emitter_pitch, receiver_pitch, s
     tau0 = 0.02
     B = 0.133;   # = 0.04 / 0.3
 
-    tau = tau0 + B * por
+    tau = (tau0 + B * (por+1)/100)/100
+
     # Iteration over each frequency
     for idx_i in range(nfreq):
 
-        epsilon = omegas[idx_i] * tau
+        epsilon = (tau)
         ## Define Neumann boundary condition for source 
         freq, freq_0 = float(freqs[idx_i]), 0.5 # ~ 0.5 [MHz]
         # Define general variance
