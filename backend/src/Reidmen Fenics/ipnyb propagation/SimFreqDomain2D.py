@@ -71,7 +71,7 @@ def fmain (n_transmitter, n_receiver, distance, emitter_pitch, receiver_pitch, s
     C_mathilde.keys()
 
     """______________________PARAMS______________________"""
-    """
+    
     # Rectangle geometry limits
     zlim=(2*sensor_edge_margin) + (n_transmitter*emitter_pitch) + distance + (n_receiver*receiver_pitch)
     ylim = plate_thickness
@@ -130,7 +130,7 @@ def fmain (n_transmitter, n_receiver, distance, emitter_pitch, receiver_pitch, s
     # Parameters of Source definition
     eps = DOLFIN_EPS
     width = 0.5
-
+    """
     """______________________DOMAINS______________________"""
     # Define domain for each source
     class DomSource_1(SubDomain):
