@@ -171,6 +171,7 @@ export const CreateSimulation = () => {
                                             placeholder="Enter your receivers number"
                                             onChange={e => setN_receivers(e.target.value)}
                                             value={n_receivers}
+                                            min = "0"
                                             required
                                         />
                                     </div>
@@ -189,6 +190,7 @@ export const CreateSimulation = () => {
                                             placeholder="Enter the distance between arrays"
                                             onChange={e => setSens_distance(e.target.value)}
                                             value={sens_distance}
+                                            min = "0"
                                             required
                                         />
                                     </div>
@@ -252,6 +254,7 @@ export const CreateSimulation = () => {
                                             placeholder="Enter the edge margin"
                                             onChange={e => setSens_edge_margin(e.target.value)}
                                             value={sens_edge_margin}
+                                            min = "0"
                                             required
                                         />
                                     </div>
@@ -274,6 +277,7 @@ export const CreateSimulation = () => {
                                             onChange={e => setMeshSize(e.target.value)}
                                             value={mesh_size}
                                             step = "0.1"
+                                            min = "0"
                                             required
                                         />
                                     </div>
@@ -295,6 +299,7 @@ export const CreateSimulation = () => {
                                             placeholder="Enter your plate thickness"
                                             onChange={e => setThickness(e.target.value)}
                                             value={plate_thickness}
+                                            min = "0"
                                             required
                                         />
                                     </div>
@@ -316,6 +321,7 @@ export const CreateSimulation = () => {
                                             placeholder="Enter your sensor width"
                                             onChange={e => setSensor_width(e.target.value)}
                                             value={sensor_width}
+                                            min = "0"
                                             required
                                         />
                                     </div>
@@ -337,6 +343,7 @@ export const CreateSimulation = () => {
                                             placeholder="Enter porosity percentage"
                                             onChange={e => setPorosity(e.target.value)}
                                             value={porosity}
+                                            min = "0"
                                             required
                                         />
                                     </div>
