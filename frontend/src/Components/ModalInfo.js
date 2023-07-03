@@ -100,7 +100,7 @@ export const ModalInfo = () => {
             <label className='fw-bold'>Attenuation:</label>
           </div>
           <div className='col'>
-            <label>Value of attenuation of the bone material.</label>
+            <label>Option to select between frequency domain simulation with attenuation or time domain simulation.</label>
           </div>
         </div>
         <div className='row mb-3'>
