@@ -484,7 +484,7 @@ def fmain (n_transmitter, n_receiver, distance, emitter_pitch, receiver_pitch, s
         'freqs': freqs, 'omegas': omegas,
         'solR_sensors_z': solR_sensors_z, 'solR_sensors_y': solR_sensors_y,
         'solI_sensors_z': solI_sensors_z, 'solI_sensors_y': solI_sensors_y}
-    filename1 = 'Files_mat/FreqSimp'+"POR"+str(por+1)+'TransIsoW'+ str(ylim)+'M'+str(size) + str(id) + '.mat'
+    filename1 = 'src/Reidmen Fenics/ipnyb propagation/Files_mat/FreqSimp'+"POR"+str(por+1)+'TransIsoW'+ str(ylim)+'M'+str(size) + str(id) + '.mat'
     filename = 'FreqSimp'+"POR"+str(por+1)+'TransIsoW'+ str(ylim)+'M'+str(size) + str(id) + '.mat'
     sio.savemat(filename1, savedic, appendmat=True)
 
