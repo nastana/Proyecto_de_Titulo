@@ -25,6 +25,8 @@ export const CreateSimulation = () => {
     
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
+
+    const [errorAlert, setErrorAlert] = useState(null);
     
     var imagen = new Image();
     //imagen.onload = imagenCargada;
@@ -48,54 +50,88 @@ export const CreateSimulation = () => {
     const handleSubmit = async (e) => {
         //console.log(e)
         e.preventDefault();
+
+        if (errorAlert) {
+            return; // Stop execution if there is an error
+        }
+
+        const formData = {
+            sim_name: sim_name,
+            n_emitters: parseInt(n_emitters),
+            n_receivers: parseInt(n_receivers),
+            sensor_width: parseFloat(sensor_width),
+            sens_distance: parseFloat(sens_distance),
+            emitters_pitch: parseInt(emitters_pitch),
+            receivers_pitch: parseInt(receivers_pitch),
+            sens_edge_margin: parseFloat(sens_edge_margin),
+            mesh_size: parseFloat(mesh_size),
+            plate_thickness: parseInt(plate_thickness),
+            porosity: parseFloat(porosity),
+            attenuation: attenuation,
+            status: 0
+        };
+
         const response = await fetch(`${API}/Input_data`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                         },
-            body: JSON.stringify({
-                sim_name: sim_name,
-                n_emitters: parseInt(n_emitters),
-                n_receivers: parseInt(n_receivers),
-                sensor_width: parseFloat(sensor_width),
-                sens_distance: parseFloat(sens_distance),
-                emitters_pitch: parseInt(emitters_pitch),
-                receivers_pitch: parseInt(receivers_pitch),
-                sens_edge_margin: parseFloat(sens_edge_margin),
-                mesh_size: parseFloat(mesh_size),
-                plate_thickness: parseInt(plate_thickness),
-                porosity: parseInt(porosity),
-                attenuation: attenuation,                
-                status: 0
-            })
+            body: JSON.stringify(formData)
         })
-        
-        console.log(JSON.stringify({
-            sim_name: sim_name,
-                n_emitters: n_emitters,
-                n_receivers: n_receivers,
-                sensor_width: sensor_width,
-                sens_distance: sens_distance,
-                emitters_pitch: emitters_pitch,
-                receivers_pitch: receivers_pitch,
-                sens_edge_margin: sens_edge_margin,
-                mesh_size: mesh_size,
-                plate_thickness: plate_thickness,
-                porosity: porosity,
-                attenuation: attenuation,                
-                status: 0
-        }))
+
+        console.log(JSON.stringify(formData))
         console.log(response.body)
+        debugger
+
         return "response"
     }
+
     const datacheck = async () => {
-        if (n_emitters === '' || n_receivers === ''  || plate_thickness === '' || porosity === '' || attenuation === '') {
-            <div className="alert alert-danger">
-                <strong>Danger!</strong> Indicates a dangerous or potentially negative action.
-            </div>
-        } else {
-            handleShow()
+        // Limpiar el mensaje de error al iniciar la validación
+        setErrorAlert(null);
+
+        if (
+            n_emitters === '' ||
+            n_receivers === '' ||
+            plate_thickness === '' ||
+            porosity === '' ||
+            attenuation === '' ||
+            sensor_width === '' ||
+            sens_distance === '' ||
+            emitters_pitch === '' ||
+            receivers_pitch === '' ||
+            sens_edge_margin === '' ||
+            mesh_size === ''
+        ) {
+            setErrorAlert(
+                <div className="alert alert-danger">
+                    <strong>Please fill all the fields.</strong>
+                </div>
+            );
+            return;
         }
+    
+        if (parseInt(n_emitters) >= parseInt(n_receivers)) {
+            setErrorAlert(
+                <div className="alert alert-danger" role="alert">
+                    <strong>The number of emitters must be greater than the number of receivers.</strong>
+                </div>
+            );
+            return;
+        }
+
+        if (parseFloat(sens_edge_margin) !== parseInt(sens_edge_margin) ||
+            parseFloat(emitters_pitch) !== parseInt(emitters_pitch)
+            ) {
+            setErrorAlert(
+                <div className="alert alert-danger" role="alert">
+                    <strong>The values of Edge Margin and Emitters Pitch must be integers.</strong>
+                </div>
+            );
+            return;
+        }
+    
+        handleShow();
 
     }
 
@@ -154,6 +190,8 @@ export const CreateSimulation = () => {
                                             value={n_emitters}
                                             min = "0"
                                             required
+                                            style={{ appearance: 'textfield', MozAppearance: 'textfield' }}
+                                            onWheel={e => e.currentTarget.blur()}
                                         />
                                     </div>
                                 </div>
@@ -173,6 +211,8 @@ export const CreateSimulation = () => {
                                             value={n_receivers}
                                             min = "0"
                                             required
+                                            style={{ appearance: 'textfield', MozAppearance: 'textfield' }}
+                                            onWheel={e => e.currentTarget.blur()}
                                         />
                                     </div>
                                 </div>
@@ -190,8 +230,11 @@ export const CreateSimulation = () => {
                                             placeholder="Enter the distance between arrays"
                                             onChange={e => setSens_distance(e.target.value)}
                                             value={sens_distance}
+                                            step = "0.01"
                                             min = "0"
                                             required
+                                            style={{ appearance: 'textfield', MozAppearance: 'textfield' }}
+                                            onWheel={e => e.currentTarget.blur()}
                                         />
                                     </div>
                                     <div className="col-1">
@@ -212,7 +255,10 @@ export const CreateSimulation = () => {
                                             placeholder="Enter the emitter pitch"
                                             onChange={e => setEmitter_pitch(e.target.value)}
                                             value={emitters_pitch}
+                                            min = "0"
                                             required
+                                            style={{ appearance: 'textfield', MozAppearance: 'textfield' }}
+                                            onWheel={e => e.currentTarget.blur()}
                                         />
                                     </div>
                                     <div className="col-1">
@@ -233,7 +279,10 @@ export const CreateSimulation = () => {
                                             placeholder="Enter the receiver pitch"
                                             onChange={e => setReceivers_pitch(e.target.value)}
                                             value={receivers_pitch}
+                                            min = "0"
                                             required
+                                            style={{ appearance: 'textfield', MozAppearance: 'textfield' }}
+                                            onWheel={e => e.currentTarget.blur()}
                                         />
                                     </div>
                                     <div className="col-1">
@@ -254,8 +303,11 @@ export const CreateSimulation = () => {
                                             placeholder="Enter the edge margin"
                                             onChange={e => setSens_edge_margin(e.target.value)}
                                             value={sens_edge_margin}
+                                            step = "0.01"
                                             min = "0"
                                             required
+                                            style={{ appearance: 'textfield', MozAppearance: 'textfield' }}
+                                            onWheel={e => e.currentTarget.blur()}
                                         />
                                     </div>
                                     <div className="col-1">
@@ -276,9 +328,11 @@ export const CreateSimulation = () => {
                                             placeholder="Enter Typical Mesh Size"
                                             onChange={e => setMeshSize(e.target.value)}
                                             value={mesh_size}
-                                            step = "0.1"
+                                            step = "0.01"
                                             min = "0"
                                             required
+                                            style={{ appearance: 'textfield', MozAppearance: 'textfield' }}
+                                            onWheel={e => e.currentTarget.blur()}
                                         />
                                     </div>
                                     <div className="col-1">
@@ -301,6 +355,8 @@ export const CreateSimulation = () => {
                                             value={plate_thickness}
                                             min = "0"
                                             required
+                                            style={{ appearance: 'textfield', MozAppearance: 'textfield' }}
+                                            onWheel={e => e.currentTarget.blur()}
                                         />
                                     </div>
                                     <div className="col-1">
@@ -321,8 +377,11 @@ export const CreateSimulation = () => {
                                             placeholder="Enter your sensor width"
                                             onChange={e => setSensor_width(e.target.value)}
                                             value={sensor_width}
+                                            step = "0.01"
                                             min = "0"
                                             required
+                                            style={{ appearance: 'textfield', MozAppearance: 'textfield' }}
+                                            onWheel={e => e.currentTarget.blur()}
                                         />
                                     </div>
                                     <div className="col-1">
@@ -343,8 +402,11 @@ export const CreateSimulation = () => {
                                             placeholder="Enter porosity percentage"
                                             onChange={e => setPorosity(e.target.value)}
                                             value={porosity}
+                                            step = "0.01"
                                             min = "0"
                                             required
+                                            style={{ appearance: 'textfield', MozAppearance: 'textfield' }}
+                                            onWheel={e => e.currentTarget.blur()}
                                         />
                                     </div>
                                     <div className="col-1">
@@ -412,8 +474,13 @@ export const CreateSimulation = () => {
 
                 </div>
                 <div className="col-lg-7 text-center text-lg-start">
+                    <hr />
                     <h1 className="display-4 fw-bold" align="center">Summary Diagram</h1>
                     <img src={image}></img>
+                    <hr />
+                    <div>
+                        {errorAlert}
+                    </div>
                 </div>
             </div>
             <div className="modal fade" id="exampleModal" tabIndex={-1} aria-labelledby="exampleModalLabel" aria-hidden="true">
