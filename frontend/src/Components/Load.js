@@ -9,7 +9,7 @@ import Pagination from './Pagination';
 import Badge from 'react-bootstrap/Badge';
 
 const API = process.env.REACT_APP_BACKEND;
-console.log(API);
+//console.log(API);
 
 export const Load = () => {
 
@@ -40,20 +40,20 @@ export const Load = () => {
 
         }
         else if (v === "ID") {
-            console.log("Consulta Id")
+            //console.log("Consulta Id")
             const res = await fetch(`${API}/Load_data/${searchInput}`)
             const data = await res.json()
             setSim(data)
         }
         else if (v === "Porosity") {
-            console.log("Consulta Porosity")
+            //console.log("Consulta Porosity")
             const res = await fetch(`${API}/Load_data/porosity/${searchInput}`)
             const data = await res.json()
             setSim(data)
         }
 
         else if (v === "Distance") {
-            console.log("Consulta Distancia")
+            //console.log("Consulta Distancia")
             const res = await fetch(`${API}/Load_data/distance/${searchInput}`)
             const data = await res.json()
             setSim(data)
@@ -71,7 +71,7 @@ export const Load = () => {
     const indexOfFirstPost = indexOfLastPost - postPerPage;
     const currentPosts = sim.slice(indexOfFirstPost, indexOfLastPost);
     const paginate = pageNumer => setCurentPage(pageNumer)
-    console.log(currentPosts)
+    //console.log(currentPosts)
 
 
     const viewInfo = async (id) => {
@@ -154,7 +154,7 @@ export const Load = () => {
         element.click();
     }
     const simulationStatus = (status)=>{
-      console.log(status);
+      //console.log(status);
         switch(status){
             case "0": 
               return (<Badge bg="danger">Not started</Badge>) 
