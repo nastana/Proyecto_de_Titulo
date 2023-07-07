@@ -94,7 +94,7 @@ def fmain (n_transmitter, n_receiver, distance, emitter_pitch, receiver_pitch, s
     # Define source locations
     # Using notation consistent with the 3D-case
     nsous = n_transmitter#1 #Cantidad de emisores
-    zsous = [n for n in range(sensor_edge_margin, sensor_edge_margin + ((n_receiver-1)*emitter_pitch), emitter_pitch)]
+    zsous = np.linspace(sensor_edge_margin, sensor_edge_margin + ((n_receiver-1) * emitter_pitch), num=n_receiver)
     ysous =  nsous*[ylim*1,]
 
     # Position of sensor to obtain the force!
