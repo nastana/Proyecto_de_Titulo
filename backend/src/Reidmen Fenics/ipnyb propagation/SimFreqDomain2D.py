@@ -78,7 +78,7 @@ def fmain (n_transmitter, n_receiver, distance, emitter_pitch, receiver_pitch, s
 
     # Porosity level from Mathilde data 
     # this data starts from 1% porosity values!
-    por = porosity # the porosity level is por+1
+    por = porosity - 1# the porosity level is por+1
     
     # Define domain size 
     dxt = distance 

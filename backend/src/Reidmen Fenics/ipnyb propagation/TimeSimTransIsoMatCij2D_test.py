@@ -51,7 +51,7 @@ def fmain (n_transmitter, n_receiver, distance, emitter_pitch, receiver_pitch, s
     nsous = n_transmitter#1 #Cantidad de emisores
 
     #zsous = [n for n in range(10, 25, 2)] version anterior
-    zsous = [n for n in range(sensor_edge_margin, sensor_edge_margin + ((n_receiver-1)*emitter_pitch), emitter_pitch)]
+    zsous = np.linspace(sensor_edge_margin, sensor_edge_margin + ((n_receiver-1) * emitter_pitch), num=n_receiver)
     #cambios : zsous = [n for n in range(edge margin,edge margin + (n_transmitter-1)*Emitter pitch, Emitter pitch)] 
     #[n for n in range(margen, margen+(NE-1)*pE, pE)]
 
