@@ -81,7 +81,6 @@ export const CreateSimulation = () => {
 
         console.log(JSON.stringify(formData))
         console.log(response.body)
-        debugger
 
         return "response"
     }
@@ -419,8 +418,7 @@ export const CreateSimulation = () => {
                                                 type="radio"
                                                 name="attenuation"
                                                 id="attenuationYes"
-                                                step = "0.01"
-                                                value="0"
+                                                value="1"
                                                 onChange={e => setAttenuation(e.target.value)}
                                                 required
                                             />
