@@ -61,8 +61,8 @@ export const CreateSimulation = () => {
             n_receivers: parseInt(n_receivers),
             sensor_width: parseFloat(sensor_width),
             sens_distance: parseFloat(sens_distance),
-            emitters_pitch: parseInt(emitters_pitch),
-            receivers_pitch: parseInt(receivers_pitch),
+            emitters_pitch: parseFloat(emitters_pitch),
+            receivers_pitch: parseFloat(receivers_pitch),
             sens_edge_margin: parseFloat(sens_edge_margin),
             mesh_size: parseFloat(mesh_size),
             plate_thickness: parseInt(plate_thickness),
@@ -120,16 +120,6 @@ export const CreateSimulation = () => {
             return;
         }
 
-        if (parseFloat(sens_edge_margin) !== parseInt(sens_edge_margin) ||
-            parseFloat(emitters_pitch) !== parseInt(emitters_pitch)
-            ) {
-            setErrorAlert(
-                <div className="alert alert-danger" role="alert">
-                    <strong>The values of Edge Margin and Emitters Pitch must be integers.</strong>
-                </div>
-            );
-            return;
-        }
     
         handleShow();
 
@@ -255,6 +245,7 @@ export const CreateSimulation = () => {
                                             placeholder="Enter the emitter pitch"
                                             onChange={e => setEmitter_pitch(e.target.value)}
                                             value={emitters_pitch}
+                                            step = "0.01"
                                             min = "0"
                                             required
                                             style={{ appearance: 'textfield', MozAppearance: 'textfield' }}
@@ -279,6 +270,7 @@ export const CreateSimulation = () => {
                                             placeholder="Enter the receiver pitch"
                                             onChange={e => setReceivers_pitch(e.target.value)}
                                             value={receivers_pitch}
+                                            step = "0.01"
                                             min = "0"
                                             required
                                             style={{ appearance: 'textfield', MozAppearance: 'textfield' }}
@@ -353,6 +345,7 @@ export const CreateSimulation = () => {
                                             placeholder="Enter your plate thickness"
                                             onChange={e => setThickness(e.target.value)}
                                             value={plate_thickness}
+                                            step = "0.01"
                                             min = "0"
                                             required
                                             style={{ appearance: 'textfield', MozAppearance: 'textfield' }}
@@ -426,7 +419,8 @@ export const CreateSimulation = () => {
                                                 type="radio"
                                                 name="attenuation"
                                                 id="attenuationYes"
-                                                value="1"
+                                                step = "0.01"
+                                                value="0"
                                                 onChange={e => setAttenuation(e.target.value)}
                                                 required
                                             />
