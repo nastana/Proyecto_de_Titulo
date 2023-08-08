@@ -339,7 +339,7 @@ def ValidData(n_transmitter, n_receiver, emitters_pitch, recivers_pitch,sensor_w
         return False, "n_receiver", str(type(n_receiver))
     elif(type(emitters_pitch) is not int and type(emitters_pitch) is not float):
         return False, "emitters_pitch", str(type(emitters_pitch))
-    elif(type(recivers_pitch) is not int and ype(recivers_pitch) is not float):
+    elif(type(recivers_pitch) is not int and type(recivers_pitch) is not float):
         return False, "recivers_pitch", str(type(recivers_pitch))
     elif(type(sensor_width) is not int and type(sensor_width) is not float):
         return False, "sensor_width", str(type(sensor_width))       
