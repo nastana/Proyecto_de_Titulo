@@ -58,7 +58,7 @@ def fmain (n_transmitter, n_receiver, distance, emitter_pitch, receiver_pitch, s
     ysous =  nsous*[ylim*1,]
     #TODO: 1 parametrizable a futuro
     eps = DOLFIN_EPS
-    width = sensor_width #antes era 0.5 sens_width
+    width = 0.9 * emitter_pitch #antes era 0.5 sens_width
 
     # Define domain for each source
 

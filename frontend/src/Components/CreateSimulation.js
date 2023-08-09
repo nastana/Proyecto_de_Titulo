@@ -18,7 +18,6 @@ export const CreateSimulation = () => {
     const [plate_thickness, setThickness] = useState('')
     const [porosity, setPorosity] = useState('')
     const [attenuation, setAttenuation] = useState('')
-    const [sensor_width, setSensor_width] = useState('')
     
     const [show, setShow] = useState(false);
     // const [showf, setShowf] = useState(false);
@@ -59,7 +58,6 @@ export const CreateSimulation = () => {
             sim_name: sim_name,
             n_emitters: parseInt(n_emitters),
             n_receivers: parseInt(n_receivers),
-            sensor_width: parseFloat(sensor_width),
             sens_distance: parseFloat(sens_distance),
             emitters_pitch: parseFloat(emitters_pitch),
             receivers_pitch: parseFloat(receivers_pitch),
@@ -95,7 +93,6 @@ export const CreateSimulation = () => {
             plate_thickness === '' ||
             porosity === '' ||
             attenuation === '' ||
-            sensor_width === '' ||
             sens_distance === '' ||
             emitters_pitch === '' ||
             receivers_pitch === '' ||
@@ -344,31 +341,6 @@ export const CreateSimulation = () => {
                                             placeholder="Enter your plate thickness"
                                             onChange={e => setThickness(e.target.value)}
                                             value={plate_thickness}
-                                            step = "0.01"
-                                            min = "0"
-                                            required
-                                            style={{ appearance: 'textfield', MozAppearance: 'textfield' }}
-                                            onWheel={e => e.currentTarget.blur()}
-                                        />
-                                    </div>
-                                    <div className="col-1">
-                                        <label className="d-md-flex justify-content-md-end col-form-label">mm</label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="form-group">
-                                <div className="row mb-2">
-                                    <div className="col-5">
-                                        <label htmlFor="width" className="col-form-label">Sensor Width:</label>
-                                    </div>
-                                    <div className="col-6">
-                                        <input
-                                            type="number"
-                                            className="form-control"
-                                            id="width"
-                                            placeholder="Enter your sensor width"
-                                            onChange={e => setSensor_width(e.target.value)}
-                                            value={sensor_width}
                                             step = "0.01"
                                             min = "0"
                                             required

@@ -104,7 +104,7 @@ def fmain (n_transmitter, n_receiver, distance, emitter_pitch, receiver_pitch, s
 
     # Parameters of Source definition
     eps = DOLFIN_EPS
-    width = sensor_width #antes era 0.5 sens_width
+    width = 0.9 * emitter_pitch #antes era 0.5 sens_width
     
     """# Rectangle geometry limits
     zlim, ylim = 70., 2.8
