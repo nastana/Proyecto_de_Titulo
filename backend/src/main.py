@@ -81,7 +81,7 @@ def input_data():
     if (isValid):
         plate_length = sens_edge_margin*2 + n_emitters*emitters_pitch +sens_distance+ n_receivers*receivers_pitch
         cur = mysql.connection.cursor()
-        cur.execute("INSERT INTO simulation (code_simulation, name_simulation, n_transmitter, n_receiver, emitters_pitch, receivers_pitch, sensor_distance, sensor_edge_margin, typical_mesh_size, plate_thickness, plate_length, porosity, attenuation, p_status) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
+        cur.execute("INSERT INTO simulation (code_simulation, name_simulation, n_transmitter, n_receiver, emitters_pitch, receivers_pitch, sensor_distance, sensor_edge_margin, typical_mesh_size, plate_thickness, plate_length, porosity, attenuation, p_status) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
         (code_simulation, sim_name, n_emitters, n_receivers, emitters_pitch, receivers_pitch, sens_distance, sens_edge_margin, mesh_size, plate_thickness, plate_length, porosity, attenuation, status))
         mysql.connection.commit()
 
@@ -248,9 +248,9 @@ def load_result_id_put(id):
    
   
     if(attenuation == 1):
-        filename,time = ReidmenFreq.fmain(n_transmitter,n_receiver,sensor_distance, emitters_pitch, receivers_pitch, sensor_edge_margin, typical_mesh_size, plate_thickness, plate_length, porosity,attenuation,sub_id)
+        filename,time = ReidmenFreq.fmain(n_transmitter,n_receiver,sensor_distance, emitters_pitch, receivers_pitch, sensor_edge_margin, typical_mesh_size, plate_thickness, plate_length, None, porosity,attenuation,sub_id)
     else:
-        filename,time = Reidmen.fmain(n_transmitter,n_receiver,sensor_distance, emitters_pitch, receivers_pitch, sensor_edge_margin, typical_mesh_size, plate_thickness, plate_length, porosity,attenuation,sub_id)
+        filename,time = Reidmen.fmain(n_transmitter,n_receiver,sensor_distance, emitters_pitch, receivers_pitch, sensor_edge_margin, typical_mesh_size, plate_thickness, plate_length, None,porosity,attenuation,sub_id)
     print("Nombre archivo",filename)
     
     filepath = dockerRoute + "Reidmen Fenics/ipnyb propagation/Files_mat/" + filename
@@ -290,7 +290,6 @@ def load_data_id_test(id):
             'n_receiver': doc[4],
             'emitters_pitch': doc[5],
             'receivers_pitch': doc[6],
-            'sensor_width': float(doc[7]),
             'sensor_distance': doc[8],
             'sensor_edge_margin': float(doc[9]),
             'typical_mesh_size': doc[10],
