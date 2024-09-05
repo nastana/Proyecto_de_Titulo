@@ -36,7 +36,7 @@ def fmain (n_transmitter, n_receiver, distance, emitter_pitch, receiver_pitch, s
     # Calculate omega
     frequency = 1e-3 # frequency value
     omega = 2 * np.pi * frequency
-    # Second dimension
+    # Second dimensioncl
     C22 = M[:, 0] # %=C11
     C66 = M[:, 1]
     C33 = M[:, 2]
@@ -81,8 +81,8 @@ def fmain (n_transmitter, n_receiver, distance, emitter_pitch, receiver_pitch, s
     por = porosity - 1# the porosity level is por+1
     
     # Define domain size 
-    dxt = distance 
-    size =  zlim/dxt # Dato importante
+    dxt = typical_mesh_size 
+    size =  round(zlim/dxt) # Dato importante
     
     # generate f and create mesh
     domain = Rectangle(Point(0., 0.), Point(zlim, ylim))
@@ -94,12 +94,12 @@ def fmain (n_transmitter, n_receiver, distance, emitter_pitch, receiver_pitch, s
     # Define source locations
     # Using notation consistent with the 3D-case
     nsous = n_transmitter#1 #Cantidad de emisores
-    zsous = np.linspace(sensor_edge_margin, sensor_edge_margin + ((n_receiver-1) * emitter_pitch), num=n_receiver)
+    zsous = np.linspace(sensor_edge_margin, sensor_edge_margin + ((n_transmitter-1) * emitter_pitch), num=n_transmitter)
     ysous =  nsous*[ylim*1,]
 
     # Position of sensor to obtain the force!
     nsens = n_receiver#1# Number of sensors separated at 0.4081 mm # RECEPTORES
-    zsens = np.linspace(sensor_edge_margin + n_transmitter + distance, sensor_edge_margin+ n_transmitter*emitter_pitch+distance + (n_receiver-1)*receiver_pitch, num=nsens)
+    zsens = np.linspace(sensor_edge_margin + n_transmitter * emitter_pitch + distance, sensor_edge_margin+ n_transmitter*emitter_pitch+distance + (n_receiver-1)*receiver_pitch, num=nsens)
     ysens = nsens*[ylim*1,]
 
     # Parameters of Source definition
@@ -405,16 +405,16 @@ def fmain (n_transmitter, n_receiver, distance, emitter_pitch, receiver_pitch, s
     tau0 = 0.02
     B = 0.133;   # = 0.04 / 0.3
 
-    tau = (tau0 + B * (por+1)/100)/100
+    tau = 4*(tau0 + B * (por+1)/100)/100
 
     # Iteration over each frequency
     for idx_i in range(nfreq):
 
         epsilon = (tau)
         ## Define Neumann boundary condition for source 
-        freq, freq_0 = float(freqs[idx_i]), 0.5 # ~ 0.5 [MHz]
+        freq, freq_0 = float(freqs[idx_i]), 1 # ~ 0.5 [MHz] ---------------------------------------------------------
         # Define general variance
-        sig_freq = 0.7 # sig_time ~ 0.7 [Mhz] 
+        sig_freq = 0.6 # sig_time ~ 0.7 [Mhz] 
         exp_R = Source(freq=freq, freq_0=freq_0,
                     sig_freq=sig_freq, osc="cos",
                     degree=1)

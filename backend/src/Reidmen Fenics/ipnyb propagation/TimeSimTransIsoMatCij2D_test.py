@@ -37,8 +37,8 @@ def fmain (n_transmitter, n_receiver, distance, emitter_pitch, receiver_pitch, s
     # this data starts from 1% porosity values!
     #por = 11 # the porosity level is por+1
     # Define domain size
-    dxt = distance #0.2 mm
-    size =  zlim/dxt#distance#350 # Dato importante
+    dxt = typical_mesh_size #0.2 mm
+    size = round(zlim/dxt) #distance#350 # Dato importante
     # generate f and create mesh
     domain = Rectangle(Point(0., 0.), Point(zlim, ylim))
     mesh = generate_mesh(domain, size)
@@ -51,7 +51,7 @@ def fmain (n_transmitter, n_receiver, distance, emitter_pitch, receiver_pitch, s
     nsous = n_transmitter#1 #Cantidad de emisores
 
     #zsous = [n for n in range(10, 25, 2)] version anterior
-    zsous = np.linspace(sensor_edge_margin, sensor_edge_margin + ((n_receiver-1) * emitter_pitch), num=n_receiver)
+    zsous = np.linspace(sensor_edge_margin, sensor_edge_margin + ((n_transmitter-1) * emitter_pitch), num=n_transmitter)
     #cambios : zsous = [n for n in range(edge margin,edge margin + (n_transmitter-1)*Emitter pitch, Emitter pitch)] 
     #[n for n in range(margen, margen+(NE-1)*pE, pE)]
 
@@ -129,7 +129,8 @@ def fmain (n_transmitter, n_receiver, distance, emitter_pitch, receiver_pitch, s
             factor = 1/(2*pow(self.sig_time,2))
             dif_time = self.time - self.t_0
             # Obtaining left side and right sides
-            num = exp(-factor*pow(dif_time,2))*cos(2*pi*dif_time)
+            f0=1
+            num = exp(-factor*pow(dif_time,2))*cos(2*pi*dif_time*f0)
             # Define values for the vector
             values[0] = 0.0 # the horizontal direction
             values[1] = -num # vertical direction
