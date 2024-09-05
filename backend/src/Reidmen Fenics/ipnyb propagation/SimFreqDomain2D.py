@@ -405,7 +405,7 @@ def fmain (n_transmitter, n_receiver, distance, emitter_pitch, receiver_pitch, s
     tau0 = 0.02
     B = 0.133;   # = 0.04 / 0.3
 
-    tau = 4*(tau0 + B * (por+1)/100)/100
+    tau = (5/10)*(tau0 + B * (por+1)/100)/100
 
     # Iteration over each frequency
     for idx_i in range(nfreq):
